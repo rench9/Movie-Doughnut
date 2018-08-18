@@ -1,8 +1,91 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".ui.activity.GalleryActivity">
+<layout xmlns:app="http://schemas.android.com/apk/res-auto">
 
-</android.support.constraint.ConstraintLayout>
+    <data>
+
+        <variable
+            name="vm"
+            type="com.yahoo.r4hu7.moviesdoughnut.ui.viewmodel.GalleryActivityViewModel" />
+    </data>
+
+    <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/gallery_gradient"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        tools:context=".ui.activity.GalleryActivity">
+
+        <FrameLayout
+            android:id="@id/flContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+
+        <android.support.design.widget.AppBarLayout
+            android:id="@id/abPrimary"
+            style="@style/AppTheme.ActionBar.Light.Transparent"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/app_bar_height"
+            android:fitsSystemWindows="false">
+
+            <android.support.design.widget.CollapsingToolbarLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:layout_scrollFlags="scroll"
+                app:statusBarScrim="@color/grd_1_s">
+
+                <android.support.v7.widget.Toolbar
+                    android:id="@id/tbPrimary"
+                    android:layout_width="match_parent"
+                    android:layout_height="?android:attr/actionBarSize"
+                    app:layout_collapseMode="parallax"
+                    app:popupTheme="@style/AppTheme.PopupOverlay" />
+
+                <TextView
+                    style="@style/typography_title_light"
+                    android:layout_width="match_parent"
+                    android:layout_height="?android:attr/actionBarSize"
+                    android:gravity="center"
+                    android:text="Movies"
+                    app:layout_collapseMode="parallax" />
+            </android.support.design.widget.CollapsingToolbarLayout>
+        </android.support.design.widget.AppBarLayout>
+
+        <com.yahoo.r4hu7.moviesdoughnut.ui.dependency.SortOrderSpinner
+            android:id="@id/spnContainer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
+            android:backgroundTint="@color/grd_1_p"
+            android:clipChildren="false"
+            android:clipToPadding="false"
+            android:dropDownSelector="@android:color/transparent"
+            android:overScrollMode="never"
+            android:popupBackground="@android:color/transparent"
+            android:popupElevation="0dp"
+            android:scrollbars="none"
+            android:spinnerMode="dropdown"
+            android:visibility="invisible"
+            app:layout_anchor="@id/abPrimary"
+            app:layout_anchorGravity="center"
+            app:layout_behavior="com.yahoo.r4hu7.moviesdoughnut.ui.dependency.ScrollingBehaviourViewGroup" />
+
+        <com.yahoo.r4hu7.moviesdoughnut.ui.dependency.SearchTextInputLayout
+            android:id="@id/tilSearch"
+            android:layout_width="@dimen/search_bar_w"
+            android:layout_height="@dimen/search_bar_h"
+            android:background="@drawable/shape_round_rect"
+            android:backgroundTint="@color/grd_1_p"
+            android:gravity="center"
+            android:visibility="visible"
+            app:hintEnabled="false"
+            app:hintTextAppearance="@style/typography_button"
+            app:layout_anchor="@id/abPrimary"
+            app:layout_anchorGravity="center"
+            app:layout_behavior="com.yahoo.r4hu7.moviesdoughnut.ui.dependency.ScrollingBehaviourViewGroup">
+
+        </com.yahoo.r4hu7.moviesdoughnut.ui.dependency.SearchTextInputLayout>
+    </android.support.design.widget.CoordinatorLayout>
+</layout>

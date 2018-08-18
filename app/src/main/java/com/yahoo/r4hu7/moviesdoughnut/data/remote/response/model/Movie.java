@@ -1,8 +1,15 @@
 package com.yahoo.r4hu7.moviesdoughnut.data.remote.response.model;
 
+import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.PrimaryKey;
+import android.arch.persistence.room.TypeConverters;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.yahoo.r4hu7.moviesdoughnut.data.local.entity.MovieTypeConverter;
+
+@Entity(tableName = "_movie")
+@TypeConverters(MovieTypeConverter.class)
 public class Movie implements Parcelable {
     public static final Creator<Movie> CREATOR = new Creator<Movie>() {
         @Override
@@ -20,6 +27,7 @@ public class Movie implements Parcelable {
     String overview;
     String release_date;
     int[] genre_ids;
+    @PrimaryKey
     int id;
     String original_title;
     String original_language;
@@ -29,6 +37,9 @@ public class Movie implements Parcelable {
     int vote_count;
     boolean video;
     double vote_average;
+
+    public Movie() {
+    }
 
     protected Movie(Parcel in) {
         poster_path = in.readString();

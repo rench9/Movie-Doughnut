@@ -9,11 +9,11 @@ import android.view.ViewGroup;
 
 import com.yahoo.r4hu7.moviesdoughnut.R;
 
-/**
- * A simple {@link Fragment} subclass.
- */
 public class GridMoviesFragment extends Fragment {
 
+    public static GridMoviesFragment newInstance() {
+        return new GridMoviesFragment();
+    }
 
     public GridMoviesFragment() {
         // Required empty public constructor

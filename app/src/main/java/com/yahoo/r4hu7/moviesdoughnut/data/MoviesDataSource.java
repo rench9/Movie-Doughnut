@@ -1,40 +1,51 @@
 package com.yahoo.r4hu7.moviesdoughnut.data;
 
+import com.yahoo.r4hu7.moviesdoughnut.data.remote.response.MovieCreditsResponse;
 import com.yahoo.r4hu7.moviesdoughnut.data.remote.response.MovieExternalIdsResponse;
+import com.yahoo.r4hu7.moviesdoughnut.data.remote.response.MovieImagesResponse;
 import com.yahoo.r4hu7.moviesdoughnut.data.remote.response.MovieResponse;
-import com.yahoo.r4hu7.moviesdoughnut.data.remote.response.model.Cast;
-import com.yahoo.r4hu7.moviesdoughnut.data.remote.response.model.ImageSource;
 import com.yahoo.r4hu7.moviesdoughnut.data.remote.response.model.Movie;
 import com.yahoo.r4hu7.moviesdoughnut.data.remote.response.model.Review;
 
 public interface MoviesDataSource {
-    void getMovies(LoadItemCallback<Movie[]> callback);
+    void getMovies(int sortOrder, int page, LoadPagingItemCallback<Movie[], Integer, Integer> callback);
 
-    void getMovie(LoadItemCallback<MovieResponse> callback);
+    void getMovie(int movieId, LoadItemCallback<MovieResponse> callback);
 
-    void getImages(LoadItemCallback<ImageSource[]> callback);
+    void getImages(int movieId, LoadItemCallback<MovieImagesResponse> callback);
 
-    void getCast(LoadItemCallback<Cast[]> callback);
+    void getCast(int movieId, LoadItemCallback<MovieCreditsResponse> callback);
 
-    void getReviews(LoadItemCallback<Review[]> callback);
+    void getReviews(int movieId, int page, LoadPagingItemCallback<Review[], Integer, Integer> callback);
 
-    void getLinks(LoadItemCallback<MovieExternalIdsResponse> callback);
+    void getLinks(int movieId, LoadItemCallback<MovieExternalIdsResponse> callback);
 
-    void favouriteMovie(int movieId);
+    void markFavourite(int movieId);
 
     void saveMovies(Movie[] movies);
 
     void saveMovie(MovieResponse movie);
 
-    void saveImages(ImageSource source);
+    void saveImages(MovieImagesResponse movieImagesResponse);
 
-    void saveCast(Cast[] casts);
+    void saveCast(MovieCreditsResponse movieCreditsResponse);
 
     void saveSortOrder(SortOrder[] sortOrders);
 
     interface LoadItemCallback<T> {
-        void onMoviesLoaded(T t);
+        void onLoading();
 
-        void onDataNotAvailable();
+        void onItemLoaded(T t);
+
+        void onDataNotAvailable(Throwable e);
+    }
+
+    interface LoadPagingItemCallback<T, T2, T3> {
+
+        void onLoading();
+
+        void onItemLoaded(T t, T2 page, T3 totalPages);
+
+        void onDataNotAvailable(Throwable e);
     }
 }

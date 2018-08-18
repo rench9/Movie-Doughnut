@@ -1,59 +1,63 @@
 package com.yahoo.r4hu7.moviesdoughnut.data.local;
 
+import android.support.annotation.NonNull;
+
 import com.yahoo.r4hu7.moviesdoughnut.data.MoviesDataSource;
 import com.yahoo.r4hu7.moviesdoughnut.data.SortOrder;
+import com.yahoo.r4hu7.moviesdoughnut.data.remote.response.MovieCreditsResponse;
 import com.yahoo.r4hu7.moviesdoughnut.data.remote.response.MovieExternalIdsResponse;
+import com.yahoo.r4hu7.moviesdoughnut.data.remote.response.MovieImagesResponse;
 import com.yahoo.r4hu7.moviesdoughnut.data.remote.response.MovieResponse;
-import com.yahoo.r4hu7.moviesdoughnut.data.remote.response.model.Cast;
-import com.yahoo.r4hu7.moviesdoughnut.data.remote.response.model.ImageSource;
 import com.yahoo.r4hu7.moviesdoughnut.data.remote.response.model.Movie;
 import com.yahoo.r4hu7.moviesdoughnut.data.remote.response.model.Review;
 
 public class LocalDataSource implements MoviesDataSource {
     private static volatile LocalDataSource INSTANCE;
+    MoviesDatabase database;
 
-    private LocalDataSource() {
-
+    private LocalDataSource(@NonNull MoviesDatabase database) {
+        this.database = database;
     }
 
-    public static LocalDataSource getInstance() {
+    public static LocalDataSource getInstance(MoviesDatabase moviesDatabase) {
         if (INSTANCE == null)
-            INSTANCE = new LocalDataSource();
+            INSTANCE = new LocalDataSource(moviesDatabase);
         return INSTANCE;
     }
 
+
     @Override
-    public void getMovies(LoadItemCallback<Movie[]> callback) {
+    public void getMovies(int sortOrder, int page, LoadPagingItemCallback<Movie[], Integer, Integer> callback) {
 
     }
 
     @Override
-    public void getMovie(LoadItemCallback<MovieResponse> callback) {
+    public void getMovie(int movieId, LoadItemCallback<MovieResponse> callback) {
 
     }
 
     @Override
-    public void getImages(LoadItemCallback<ImageSource[]> callback) {
+    public void getImages(int movieId, LoadItemCallback<MovieImagesResponse> callback) {
 
     }
 
     @Override
-    public void getCast(LoadItemCallback<Cast[]> callback) {
+    public void getCast(int movieId, LoadItemCallback<MovieCreditsResponse> callback) {
 
     }
 
     @Override
-    public void getReviews(LoadItemCallback<Review[]> callback) {
+    public void getReviews(int movieId, int page, LoadPagingItemCallback<Review[], Integer, Integer> callback) {
 
     }
 
     @Override
-    public void getLinks(LoadItemCallback<MovieExternalIdsResponse> callback) {
+    public void getLinks(int movieId, LoadItemCallback<MovieExternalIdsResponse> callback) {
 
     }
 
     @Override
-    public void favouriteMovie(int movieId) {
+    public void markFavourite(int movieId) {
 
     }
 
@@ -68,12 +72,12 @@ public class LocalDataSource implements MoviesDataSource {
     }
 
     @Override
-    public void saveImages(ImageSource source) {
+    public void saveImages(MovieImagesResponse movieImagesResponse) {
 
     }
 
     @Override
-    public void saveCast(Cast[] casts) {
+    public void saveCast(MovieCreditsResponse movieCreditsResponse) {
 
     }
 

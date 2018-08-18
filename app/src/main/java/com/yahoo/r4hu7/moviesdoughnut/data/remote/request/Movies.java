@@ -26,23 +26,6 @@ public class Movies {
         endpoints = e;
     }
 
-    public Maybe<DiscoverMovieResponse> discoverMovies() {
-        return endpoints.discoverMovies(1).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread());
-    }
-
-    public Maybe<DiscoverMovieResponse> discoverMovies(int page) {
-        return endpoints.discoverMovies(page).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread());
-    }
-
-    /**
-     * String sortBy
-     * Allowed Values: , popularity.asc, popularity.desc, release_date.asc, release_date.desc, revenue.asc, revenue.desc, primary_release_date.asc, primary_release_date.desc, original_title.asc, original_title.desc, vote_average.asc, vote_average.desc, vote_count.asc, vote_count.desc
-     * Default: popularity.desc
-     */
-    public Maybe<DiscoverMovieResponse> discoverMovies(String sortBy, int page) {
-        return endpoints.discoverMovies(sortBy, page).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread());
-    }
-
     public Maybe<MovieResponse> getMovieById(int movieId) {
         return endpoints.getMovieById(movieId).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread());
     }

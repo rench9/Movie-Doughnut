@@ -1,7 +1,10 @@
 package com.yahoo.r4hu7.moviesdoughnut.di.module;
 
+import android.content.Context;
+
 import com.yahoo.r4hu7.moviesdoughnut.data.MoviesRepository;
 import com.yahoo.r4hu7.moviesdoughnut.data.local.LocalDataSource;
+import com.yahoo.r4hu7.moviesdoughnut.data.local.MoviesDatabase;
 import com.yahoo.r4hu7.moviesdoughnut.data.remote.Endpoints;
 import com.yahoo.r4hu7.moviesdoughnut.data.remote.RemoteDataSource;
 
@@ -16,12 +19,17 @@ public class RepositoryModule {
     }
 
     @Provides
-    public LocalDataSource localDataSource() {
-        return LocalDataSource.getInstance();
+    public LocalDataSource localDataSource(MoviesDatabase database) {
+        return LocalDataSource.getInstance(database);
     }
 
     @Provides
-    public RemoteDataSource remoteDataSource(Endpoints endpoints) {
-        return RemoteDataSource.getInstance(endpoints);
+    public RemoteDataSource remoteDataSource(Endpoints endpoints, LocalDataSource localDataSource) {
+        return RemoteDataSource.getInstance(endpoints, localDataSource);
+    }
+
+    @Provides
+    public MoviesDatabase moviesDatabase(Context context) {
+        return MoviesDatabase.getInstance(context);
     }
 }

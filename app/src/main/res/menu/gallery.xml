@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@id/actionFav"
+        android:background="#f000"
+        android:icon="@drawable/ic_grid"
+        android:title="Grid Layout"
+        app:showAsAction="always" />
+    <item
+        android:id="@id/actionFilter"
+        android:background="#f000"
+        android:icon="@drawable/ic_grid"
+        android:title="Grid Layout"
+        app:showAsAction="always" />
+    <item
+        android:id="@id/actionSearch"
+        android:background="#f000"
+        android:icon="@drawable/ic_search"
+        android:title="Search Movie"
+        android:visible="false"
+        app:showAsAction="always" />
+</menu>

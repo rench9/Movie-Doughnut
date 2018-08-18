@@ -1,36 +1,61 @@
 package com.yahoo.r4hu7.moviesdoughnut.data.remote.response;
 
+import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.Ignore;
+import android.arch.persistence.room.PrimaryKey;
+import android.arch.persistence.room.TypeConverters;
+
+import com.yahoo.r4hu7.moviesdoughnut.data.local.entity.MovieTypeConverter;
 import com.yahoo.r4hu7.moviesdoughnut.data.remote.response.model.Item;
 import com.yahoo.r4hu7.moviesdoughnut.data.remote.response.model.ProductionCompanies;
 import com.yahoo.r4hu7.moviesdoughnut.data.remote.response.model.ProductionCountries;
 import com.yahoo.r4hu7.moviesdoughnut.data.remote.response.model.SpokenLanguages;
 
+@Entity(tableName = "_detail")
+@TypeConverters(MovieTypeConverter.class)
 public class MovieResponse extends Response {
-    boolean adult;
-    String backdrop_path;
-    Object belongs_to_collection;
-    int budget;
-    Item[] genres;
-    String homepage;
-    int id;
-    String imdb_id; // minLength: 9, maxLength: 9, pattern: ^tt[0-9]{7}
-    String original_language;
-    String original_title;
-    String overview;
-    double popularity;
-    String poster_path;
-    ProductionCompanies[] production_companies;
-    ProductionCountries[] production_countries;
-    String release_date;
-    int revenue;
-    int runtime;
-    SpokenLanguages[] spoken_languages;
-    String status; //Rumored, Planned, In Production, Post Production, Released, Canceled
-    String tagline;
-    String title;
-    boolean video;
-    double vote_average;
-    int vote_count;
+    @Ignore
+    public boolean adult;
+    @Ignore
+    public String backdrop_path;
+    @Ignore
+    public Object belongs_to_collection;
+    public int budget;
+    public Item[] genres;
+    public String homepage;
+    @PrimaryKey
+    public int id;
+    public String imdb_id; // minLength: 9, maxLength: 9, pattern: ^tt[0-9]{7}
+    @Ignore
+    public String original_language;
+    @Ignore
+    public String original_title;
+    @Ignore
+    public String overview;
+    @Ignore
+    public double popularity;
+    @Ignore
+    public String poster_path;
+    @Ignore
+    public ProductionCompanies[] production_companies;
+    @Ignore
+    public ProductionCountries[] production_countries;
+    @Ignore
+    public String release_date;
+    public int revenue;
+    public int runtime;
+    @Ignore
+    public SpokenLanguages[] spoken_languages;
+    public String status; //Rumored, Planned, In Production, Post Production, Released, Canceled
+    public String tagline;
+    @Ignore
+    public String title;
+    @Ignore
+    public boolean video;
+    @Ignore
+    public double vote_average;
+    @Ignore
+    public int vote_count;
 
     public boolean isAdult() {
         return adult;

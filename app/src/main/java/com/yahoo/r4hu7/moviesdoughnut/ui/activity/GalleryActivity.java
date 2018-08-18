@@ -1,15 +1,345 @@
 package com.yahoo.r4hu7.moviesdoughnut.ui.activity;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.animation.AnimatorSet;
+import android.animation.ArgbEvaluator;
+import android.animation.ValueAnimator;
+import android.content.res.ColorStateList;
+import android.databinding.Observable;
+import android.databinding.ObservableBoolean;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.design.widget.AppBarLayout;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.animation.DecelerateInterpolator;
+import android.widget.AdapterView;
+import android.widget.FrameLayout;
 
 import com.yahoo.r4hu7.moviesdoughnut.R;
+import com.yahoo.r4hu7.moviesdoughnut.data.SortOrder;
+import com.yahoo.r4hu7.moviesdoughnut.di.DaggerRepositoryComponent;
+import com.yahoo.r4hu7.moviesdoughnut.di.module.ContextModule;
+import com.yahoo.r4hu7.moviesdoughnut.ui.dependency.SearchTextInputLayout;
+import com.yahoo.r4hu7.moviesdoughnut.ui.dependency.SortOrderSpinner;
+import com.yahoo.r4hu7.moviesdoughnut.ui.dependency.adapter.Filter;
+import com.yahoo.r4hu7.moviesdoughnut.ui.dependency.adapter.SortSpinnerAdapter;
+import com.yahoo.r4hu7.moviesdoughnut.ui.fragment.GalleryLandingFragment;
+import com.yahoo.r4hu7.moviesdoughnut.ui.fragment.GridMoviesFragment;
+import com.yahoo.r4hu7.moviesdoughnut.ui.viewmodel.GalleryActivityViewModel;
+import com.yahoo.r4hu7.moviesdoughnut.ui.viewmodel.MoviesViewModel;
+import com.yahoo.r4hu7.moviesdoughnut.ui.viewmodel.ViewModelHolder;
+import com.yahoo.r4hu7.moviesdoughnut.util.ActivityUtils;
+import com.yahoo.r4hu7.moviesdoughnut.util.MovieNavigator;
 
-public class GalleryActivity extends AppCompatActivity {
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
+public class GalleryActivity extends AppCompatActivity implements MovieNavigator, AdapterView.OnItemSelectedListener {
+
+    public static final String ACTIVITY_GALLERY_VM = "ACTIVITY_GALLERY_VM";
+    public static final String MOVIES_VM = "MOVIES_VM";
+    public static final String MOVIES_VM_POPULAR = "MOVIES_VM_POPULAR";
+    public static final String MOVIES_VM_UPCOMING = "MOVIES_VM_UPCOMING";
+    public static final String MOVIES_VM_TOPRATED = "MOVIES_VM_TOPRATED";
+    public static final String MOVIES_VM_NOW_PLAYING = "MOVIES_VM_NOW_PLAYING";
+    public static final String GRID_MOVIES_FRAGMENT = "GRID_MOVIES_FRAGMENT";
+    public static final String LANDING_FRAGMENT = "LANDING_FRAGMENT";
+
+    private GalleryActivityViewModel activityViewModel;
+
+    @BindView(R.id.tbPrimary)
+    Toolbar toolbar;
+    @BindView(R.id.tilSearch)
+    SearchTextInputLayout searchInputLayout;
+    @BindView(R.id.abPrimary)
+    AppBarLayout abPrimary;
+    @BindView(R.id.spnContainer)
+    SortOrderSpinner spnContainer;
+    @BindView(R.id.flContainer)
+    FrameLayout flContainer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_gallery);
+        ButterKnife.bind(this);
+
+        setSupportActionBar(toolbar);
+        initFilterSpinner();
+
+        activityViewModel = findOrCreateGalleryActivityViewModel();
+        activityViewModel.gridView.addOnPropertyChangedCallback(new Observable.OnPropertyChangedCallback() {
+            @Override
+            public void onPropertyChanged(Observable sender, int propertyId) {
+                if (((ObservableBoolean) sender).get())
+                    hideSearchBar();
+                else
+                    hideSpinner();
+            }
+        });
+
+        if (activityViewModel.gridView.get()) {
+            findOrCreateGridFragment();
+            spnContainer.forceVisible();
+            searchInputLayout.forceHide();
+        } else {
+            GalleryLandingFragment fragment = findOrCreateLandingFragment();
+            fragment.setNowPlayingViewModel(findOrCreateMoviesViewModel(MOVIES_VM_NOW_PLAYING));
+            fragment.setUpComingViewModel(findOrCreateMoviesViewModel(MOVIES_VM_UPCOMING));
+            fragment.setPopularViewModel(findOrCreateMoviesViewModel(MOVIES_VM_POPULAR));
+            fragment.setTopRatedViewModel(findOrCreateMoviesViewModel(MOVIES_VM_TOPRATED));
+            spnContainer.forceHide();
+            searchInputLayout.forceVisible();
+        }
+
+
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.gallery, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.actionSearch:
+                activityViewModel.gridView.set(false);
+                break;
+            case R.id.actionFilter:
+                activityViewModel.gridView.set(true);
+                break;
+            case R.id.actionFav:
+                activityViewModel.gridView.set(true);
+                break;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void initFilterSpinner() {
+        Filter[] filters = new Filter[]{
+                new Filter(SortOrder.POPULAR, getResources().getString(R.string.popular_movies)),
+                new Filter(SortOrder.TOPRATED, getResources().getString(R.string.top_rated_movies)),
+                new Filter(SortOrder.NOWPLAYING, getResources().getString(R.string.now_playing_movies)),
+                new Filter(SortOrder.UPCOMING, getResources().getString(R.string.upcoming_movies)),
+                new Filter(SortOrder.FAVORITE, getResources().getString(R.string.fav_movies))
+        };
+
+        spnContainer.setAdapter(new SortSpinnerAdapter(this, R.layout.adapter_spinner, filters));
+        spnContainer.setOnItemSelectedListener(this);
+
+    }
+
+    private void hideSearchBar() {
+
+        ValueAnimator anim = ValueAnimator.ofInt(searchInputLayout.getMeasuredWidth(), getResources().getDimensionPixelSize(R.dimen.filter_w));
+        anim.addUpdateListener(valueAnimator -> {
+            int val = (Integer) valueAnimator.getAnimatedValue();
+            ViewGroup.LayoutParams layoutParams = searchInputLayout.getLayoutParams();
+            layoutParams.width = val;
+            searchInputLayout.setLayoutParams(layoutParams);
+        });
+
+        ValueAnimator alphaAnimation = ValueAnimator.ofFloat(searchInputLayout.getChildAt(0).getAlpha(), 0f);
+        alphaAnimation.addUpdateListener(valueAnimator -> {
+            float val = (float) valueAnimator.getAnimatedValue();
+            searchInputLayout.getChildAt(0).setAlpha(val);
+        });
+
+
+        ValueAnimator colorAnimation = null;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            colorAnimation = ValueAnimator.ofObject(new ArgbEvaluator(), searchInputLayout.getBackgroundTintList().getDefaultColor(), ContextCompat.getColor(getBaseContext(), R.color.shade0));
+        }
+        colorAnimation.addUpdateListener(valueAnimator -> {
+            int val = (Integer) valueAnimator.getAnimatedValue();
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                searchInputLayout.setBackgroundTintList(ColorStateList.valueOf(val));
+            }
+        });
+
+        AnimatorSet animatorSet = new AnimatorSet();
+        animatorSet.setInterpolator(new DecelerateInterpolator());
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+            animatorSet.playTogether(anim, colorAnimation, alphaAnimation);
+        else
+            animatorSet.playTogether(anim, alphaAnimation);
+        animatorSet.setDuration(500);
+
+        animatorSet.addListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                super.onAnimationEnd(animation);
+                searchInputLayout.forceHide();
+                spnContainer.forceVisible();
+                toolbar.getMenu().findItem(R.id.actionSearch).setVisible(true);
+                toolbar.getMenu().findItem(R.id.actionFilter).setVisible(false);
+            }
+        });
+        animatorSet.start();
+    }
+
+    private void hideSpinner() {
+        ValueAnimator anim = ValueAnimator.ofInt(searchInputLayout.getMeasuredWidth(), getResources().getDimensionPixelSize(R.dimen.search_bar_w));
+        anim.addUpdateListener(valueAnimator -> {
+            int val = (Integer) valueAnimator.getAnimatedValue();
+            ViewGroup.LayoutParams layoutParams = searchInputLayout.getLayoutParams();
+            layoutParams.width = val;
+            searchInputLayout.setLayoutParams(layoutParams);
+        });
+
+        ValueAnimator colorAnimation = null;
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+            colorAnimation = ValueAnimator.ofObject(new ArgbEvaluator(), searchInputLayout.getBackgroundTintList().getDefaultColor(), ContextCompat.getColor(getBaseContext(), R.color.sky_blue_s2));
+        }
+        colorAnimation.addUpdateListener(valueAnimator -> {
+            int val = (Integer) valueAnimator.getAnimatedValue();
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                searchInputLayout.setBackgroundTintList(ColorStateList.valueOf(val));
+            }
+        });
+
+        ValueAnimator alphaAnimation = ValueAnimator.ofFloat(searchInputLayout.getChildAt(0).getAlpha(), 1.0f);
+        alphaAnimation.addUpdateListener(valueAnimator -> {
+            float val = (float) valueAnimator.getAnimatedValue();
+            searchInputLayout.getChildAt(0).setAlpha(val);
+        });
+
+
+        AnimatorSet animatorSet = new AnimatorSet();
+        animatorSet.setInterpolator(new DecelerateInterpolator());
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+            animatorSet.playTogether(anim, colorAnimation, alphaAnimation);
+        else
+            animatorSet.playTogether(anim, alphaAnimation);
+        animatorSet.setDuration(500);
+
+        animatorSet.addListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationStart(Animator animation) {
+                super.onAnimationStart(animation);
+                searchInputLayout.forceVisible();
+                spnContainer.forceHide();
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                super.onAnimationEnd(animation);
+                toolbar.getMenu().findItem(R.id.actionSearch).setVisible(false);
+                toolbar.getMenu().findItem(R.id.actionFilter).setVisible(true);
+            }
+        });
+        animatorSet.start();
+    }
+
+    @NonNull
+    private GridMoviesFragment findOrCreateGridFragment() {
+        GridMoviesFragment fragment =
+                (GridMoviesFragment) getSupportFragmentManager().findFragmentByTag(GRID_MOVIES_FRAGMENT);
+        if (fragment == null) {
+            fragment = GridMoviesFragment.newInstance();
+            ActivityUtils.addFragmentToActivity(
+                    getSupportFragmentManager(), fragment, R.id.flContainer);
+        }
+        return fragment;
+    }
+
+    @NonNull
+    private GalleryLandingFragment findOrCreateLandingFragment() {
+        GalleryLandingFragment fragment =
+                (GalleryLandingFragment) getSupportFragmentManager().findFragmentByTag(LANDING_FRAGMENT);
+        if (fragment == null) {
+            fragment = GalleryLandingFragment.newInstance();
+            ActivityUtils.addFragmentToActivity(
+                    getSupportFragmentManager(), fragment, R.id.flContainer);
+        }
+        return fragment;
+    }
+
+    @NonNull
+    private GalleryActivityViewModel findOrCreateGalleryActivityViewModel() {
+        // In a configuration change we might have a ViewModel present. It's retained using the
+        // Fragment Manager.
+        @SuppressWarnings("unchecked")
+        ViewModelHolder<GalleryActivityViewModel> retainedViewModel =
+                (ViewModelHolder<GalleryActivityViewModel>) getSupportFragmentManager()
+                        .findFragmentByTag(ACTIVITY_GALLERY_VM);
+
+        if (retainedViewModel != null && retainedViewModel.getViewModel() != null) {
+            // If the model was retained, return it.
+            return retainedViewModel.getViewModel();
+        } else {
+            // There is no ViewModel yet, create it.
+            GalleryActivityViewModel viewModel = new GalleryActivityViewModel();
+            // and bind it to this Activity's lifecycle using the Fragment Manager.
+            ActivityUtils.addFragmentToActivity(
+                    getSupportFragmentManager(),
+                    ViewModelHolder.createContainer(viewModel),
+                    ACTIVITY_GALLERY_VM);
+            return viewModel;
+        }
+    }
+
+    @NonNull
+    private MoviesViewModel findOrCreateMoviesViewModel(String tag) {
+        // In a configuration change we might have a ViewModel present. It's retained using the
+        // Fragment Manager.
+        @SuppressWarnings("unchecked")
+        ViewModelHolder<MoviesViewModel> retainedViewModel =
+                (ViewModelHolder<MoviesViewModel>) getSupportFragmentManager()
+                        .findFragmentByTag(tag);
+
+        if (retainedViewModel != null && retainedViewModel.getViewModel() != null) {
+            // If the model was retained, return it.
+            return retainedViewModel.getViewModel();
+        } else {
+            // There is no ViewModel yet, create it.
+            MoviesViewModel viewModel = new MoviesViewModel(
+                    DaggerRepositoryComponent.builder().contextModule(new ContextModule(getApplicationContext())).build().getMoviesRepository()
+            );
+            // and bind it to this Activity's lifecycle using the Fragment Manager.
+            ActivityUtils.addFragmentToActivity(
+                    getSupportFragmentManager(),
+                    ViewModelHolder.createContainer(viewModel),
+                    tag);
+            return viewModel;
+        }
+    }
+
+    @Override
+    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+        if (adapterView.getSelectedItem() instanceof Filter) {
+            Filter f = (Filter) adapterView.getSelectedItem();
+            /*TODO change sort order*/
+        }
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> adapterView) {
+
+    }
+
+    @Override
+    public void openMovieDetails(int movieId) {
+
+    }
+
+    @Override
+    public void openLink(String url) {
+
+    }
+
+    @Override
+    public void goBack() {
+
     }
 }

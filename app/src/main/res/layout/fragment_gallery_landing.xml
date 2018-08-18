@@ -1,14 +1,179 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".ui.fragment.GalleryLandingFragment">
+<layout xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <data>
+
+        <import type="android.view.View" />
+
+        <variable
+            name="popularVm"
+            type="com.yahoo.r4hu7.moviesdoughnut.ui.viewmodel.MoviesViewModel" />
+
+        <variable
+            name="nowPlayingVm"
+            type="com.yahoo.r4hu7.moviesdoughnut.ui.viewmodel.MoviesViewModel" />
+
+        <variable
+            name="upComingVm"
+            type="com.yahoo.r4hu7.moviesdoughnut.ui.viewmodel.MoviesViewModel" />
+
+        <variable
+            name="topRatedVm"
+            type="com.yahoo.r4hu7.moviesdoughnut.ui.viewmodel.MoviesViewModel" />
+    </data>
+
+    <android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:layout_height="wrap_content"
+        android:clipChildren="false"
+        android:clipToPadding="false"
+        tools:context=".ui.fragment.GalleryLandingFragment">
 
-</FrameLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/unit6"
+                android:orientation="horizontal"
+                android:visibility="@{nowPlayingVm.movies.isEmpty()?View.GONE:View.VISIBLE}">
+
+                <TextView
+                    style="@style/typography_subheading_light"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Now in theaters"
+                    android:textStyle="bold" />
+
+                <TextView
+                    style="@style/typography_caption_bold_light"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/unit4"
+                    android:text="more" />
+            </LinearLayout>
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@id/rvContainerNowPlaying"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/unit6"
+                android:clipChildren="false"
+                android:clipToPadding="false"
+                android:nestedScrollingEnabled="false"
+                android:orientation="horizontal"
+                android:overScrollMode="never"
+                app:layoutManager="android.support.v7.widget.LinearLayoutManager" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/unit6"
+                android:orientation="horizontal">
+
+                <TextView
+                    style="@style/typography_subheading_light"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Upcoming Movies"
+                    android:textStyle="bold" />
+
+                <TextView
+                    style="@style/typography_caption_bold_light"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/unit4"
+                    android:text="more" />
+            </LinearLayout>
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@id/rvContainerUpcoming"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/unit6"
+                android:clipChildren="false"
+                android:clipToPadding="false"
+                android:nestedScrollingEnabled="false"
+                android:orientation="horizontal"
+                android:overScrollMode="never"
+                app:layoutManager="android.support.v7.widget.LinearLayoutManager" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/unit6"
+                android:orientation="horizontal"
+                android:visibility="@{popularVm.movies.isEmpty()?View.GONE:View.VISIBLE}">
+
+                <TextView
+                    style="@style/typography_subheading_light"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Popular Movies"
+                    android:textStyle="bold" />
+
+                <TextView
+                    style="@style/typography_caption_bold_light"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/unit4"
+                    android:text="more" />
+            </LinearLayout>
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@id/rvContainerPopular"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/unit6"
+                android:clipChildren="false"
+                android:clipToPadding="false"
+                android:nestedScrollingEnabled="false"
+                android:orientation="horizontal"
+                android:overScrollMode="never"
+                app:layoutManager="android.support.v7.widget.LinearLayoutManager" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/unit6"
+                android:orientation="horizontal">
+
+                <TextView
+                    style="@style/typography_subheading_light"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Top Rated Movies"
+                    android:textStyle="bold" />
+
+                <TextView
+                    style="@style/typography_caption_bold_light"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/unit4"
+                    android:text="more" />
+            </LinearLayout>
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@id/rvContainerTopRated"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/unit6"
+                android:clipChildren="false"
+                android:clipToPadding="false"
+                android:nestedScrollingEnabled="false"
+                android:orientation="horizontal"
+                android:overScrollMode="never"
+                app:layoutManager="android.support.v7.widget.LinearLayoutManager" />
+
+        </LinearLayout>
+
+    </android.support.v4.widget.NestedScrollView>
+</layout>
