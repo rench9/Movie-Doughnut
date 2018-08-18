@@ -16,12 +16,12 @@
 
 package com.yahoo.r4hu7.moviesdoughnut.util;
 
+import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-
-import com.yahoo.r4hu7.moviesdoughnut.R;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -39,7 +39,7 @@ public class ActivityUtils {
         checkNotNull(fragmentManager);
         checkNotNull(fragment);
         FragmentTransaction transaction = fragmentManager.beginTransaction();
-        transaction.add(frameId, fragment);
+        transaction.replace(frameId, fragment);
         transaction.commit();
     }
 
@@ -55,4 +55,9 @@ public class ActivityUtils {
         transaction.add(fragment, tag);
         transaction.commit();
     }
+
+    public static boolean isLandscape(Resources resources) {
+        return resources.getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
+    }
+
 }

@@ -73,31 +73,26 @@ public class GalleryActivity extends AppCompatActivity implements MovieNavigator
         ButterKnife.bind(this);
 
         setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
         initFilterSpinner();
 
         activityViewModel = findOrCreateGalleryActivityViewModel();
         activityViewModel.gridView.addOnPropertyChangedCallback(new Observable.OnPropertyChangedCallback() {
             @Override
             public void onPropertyChanged(Observable sender, int propertyId) {
-                if (((ObservableBoolean) sender).get())
+                if (((ObservableBoolean) sender).get()) {
                     hideSearchBar();
-                else
+                } else {
+                    showLandingFragment();
                     hideSpinner();
+                }
             }
         });
 
         if (activityViewModel.gridView.get()) {
-            findOrCreateGridFragment();
-            spnContainer.forceVisible();
-            searchInputLayout.forceHide();
+            showGridFragment();
         } else {
-            GalleryLandingFragment fragment = findOrCreateLandingFragment();
-            fragment.setNowPlayingViewModel(findOrCreateMoviesViewModel(MOVIES_VM_NOW_PLAYING));
-            fragment.setUpComingViewModel(findOrCreateMoviesViewModel(MOVIES_VM_UPCOMING));
-            fragment.setPopularViewModel(findOrCreateMoviesViewModel(MOVIES_VM_POPULAR));
-            fragment.setTopRatedViewModel(findOrCreateMoviesViewModel(MOVIES_VM_TOPRATED));
-            spnContainer.forceHide();
-            searchInputLayout.forceVisible();
+            showLandingFragment();
         }
 
 
@@ -183,6 +178,7 @@ public class GalleryActivity extends AppCompatActivity implements MovieNavigator
                 spnContainer.forceVisible();
                 toolbar.getMenu().findItem(R.id.actionSearch).setVisible(true);
                 toolbar.getMenu().findItem(R.id.actionFilter).setVisible(false);
+                showGridFragment();
             }
         });
         animatorSet.start();
@@ -236,9 +232,27 @@ public class GalleryActivity extends AppCompatActivity implements MovieNavigator
                 super.onAnimationEnd(animation);
                 toolbar.getMenu().findItem(R.id.actionSearch).setVisible(false);
                 toolbar.getMenu().findItem(R.id.actionFilter).setVisible(true);
+                showLandingFragment();
             }
         });
         animatorSet.start();
+    }
+
+    private void showGridFragment() {
+        GridMoviesFragment fragment = findOrCreateGridFragment();
+        fragment.setMoviesViewModel(findOrCreateMoviesViewModel(MOVIES_VM_POPULAR));
+        spnContainer.forceVisible();
+        searchInputLayout.forceHide();
+    }
+
+    private void showLandingFragment() {
+        GalleryLandingFragment fragment = findOrCreateLandingFragment();
+        fragment.setNowPlayingViewModel(findOrCreateMoviesViewModel(MOVIES_VM_NOW_PLAYING));
+        fragment.setUpComingViewModel(findOrCreateMoviesViewModel(MOVIES_VM_UPCOMING));
+        fragment.setPopularViewModel(findOrCreateMoviesViewModel(MOVIES_VM_POPULAR));
+        fragment.setTopRatedViewModel(findOrCreateMoviesViewModel(MOVIES_VM_TOPRATED));
+        spnContainer.forceHide();
+        searchInputLayout.forceVisible();
     }
 
     @NonNull

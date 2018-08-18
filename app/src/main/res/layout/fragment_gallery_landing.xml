@@ -26,14 +26,16 @@
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:clipChildren="false"
-        android:clipToPadding="false"
         tools:context=".ui.fragment.GalleryLandingFragment">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:clipChildren="false"
+            android:clipToPadding="false"
+            android:orientation="vertical"
+            android:paddingEnd="@dimen/unit6"
+            android:paddingStart="@dimen/unit6">
 
             <LinearLayout
                 android:layout_width="match_parent"

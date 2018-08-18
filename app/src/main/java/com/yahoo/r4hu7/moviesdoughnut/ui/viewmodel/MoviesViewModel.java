@@ -14,10 +14,11 @@ import java.util.Arrays;
 
 public class MoviesViewModel extends ViewModel {
     public final ObservableList<Movie> movies = new ObservableArrayList<>();
-    public final ObservableBoolean dataLoading = new ObservableBoolean(false);
+    private final ObservableBoolean dataLoading = new ObservableBoolean(false);
     private MoviesRepository repository;
     private int currentPage;
     private int sortOrder;
+    private int totalPages;
 
     public MoviesViewModel(MoviesRepository repository) {
         this.repository = repository;
@@ -45,6 +46,7 @@ public class MoviesViewModel extends ViewModel {
             @Override
             public void onItemLoaded(Movie[] movies, Integer page, Integer totalPages) {
                 MoviesViewModel.this.movies.addAll(Arrays.asList(movies));
+                MoviesViewModel.this.totalPages = totalPages;
                 dataLoading.set(false);
                 currentPage++;
             }
@@ -54,5 +56,13 @@ public class MoviesViewModel extends ViewModel {
                 dataLoading.set(false);
             }
         });
+    }
+
+    public boolean isLastPage() {
+        return currentPage >= totalPages;
+    }
+
+    public boolean isDataLoading() {
+        return dataLoading.get();
     }
 }

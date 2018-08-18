@@ -7,8 +7,6 @@
         <item name="colorAccent">@color/colorAccent</item>
         <item name="android:windowContentTransitions" tools:targetApi="lollipop">true</item>
         <item name="android:windowBackground">@color/shade0</item>
-        <item name="android:windowTranslucentNavigation">true</item>
-        <item name="android:fitsSystemWindows">true</item>
         <item name="android:statusBarColor" tools:targetApi="lollipop">@color/grd_1_s</item>
 
     </style>
@@ -67,7 +65,7 @@
     </style>
 
     <style name="typography_light">
-        <item name="android:textColor">@color/shade3</item>
+        <item name="android:textColor">@color/shade0</item>
         <item name="android:colorAccent" tools:targetApi="lollipop">@color/shade8</item>
     </style>
 

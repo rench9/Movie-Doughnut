@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import com.yahoo.r4hu7.moviesdoughnut.R;
 import com.yahoo.r4hu7.moviesdoughnut.data.SortOrder;
 import com.yahoo.r4hu7.moviesdoughnut.databinding.FragmentGalleryLandingBinding;
+import com.yahoo.r4hu7.moviesdoughnut.ui.dependency.RecyclerViewMoviesPagination;
 import com.yahoo.r4hu7.moviesdoughnut.ui.dependency.adapter.PosterCardAdapter;
 import com.yahoo.r4hu7.moviesdoughnut.ui.viewmodel.MoviesViewModel;
 import com.yahoo.r4hu7.moviesdoughnut.util.MovieNavigator;
@@ -87,10 +88,10 @@ public class GalleryLandingFragment extends Fragment {
 
     private void initRecyclerViews() {
 
-        PosterCardAdapter popularMoviesAdapter = new PosterCardAdapter(popularViewModel.movies, (MovieNavigator) getActivity());
-        PosterCardAdapter nowPlayingMoviesAdapter = new PosterCardAdapter(nowPlayingViewModel.movies, (MovieNavigator) getActivity());
-        PosterCardAdapter upComingMoviesAdapter = new PosterCardAdapter(upComingViewModel.movies, (MovieNavigator) getActivity());
-        PosterCardAdapter topRatedMoviesAdapter = new PosterCardAdapter(topRatedViewModel.movies, (MovieNavigator) getActivity());
+        PosterCardAdapter popularMoviesAdapter = new PosterCardAdapter(popularViewModel.movies, (MovieNavigator) getActivity(), false);
+        PosterCardAdapter nowPlayingMoviesAdapter = new PosterCardAdapter(nowPlayingViewModel.movies, (MovieNavigator) getActivity(), false);
+        PosterCardAdapter upComingMoviesAdapter = new PosterCardAdapter(upComingViewModel.movies, (MovieNavigator) getActivity(), false);
+        PosterCardAdapter topRatedMoviesAdapter = new PosterCardAdapter(topRatedViewModel.movies, (MovieNavigator) getActivity(), false);
 
         rvContainerPopular.setAdapter(popularMoviesAdapter);
         rvContainerNowPlaying.setAdapter(nowPlayingMoviesAdapter);
@@ -101,6 +102,71 @@ public class GalleryLandingFragment extends Fragment {
         rvContainerNowPlaying.addItemDecoration(getItemDecoration());
         rvContainerTopRated.addItemDecoration(getItemDecoration());
         rvContainerUpcoming.addItemDecoration(getItemDecoration());
+
+        rvContainerPopular.addOnScrollListener(new RecyclerViewMoviesPagination() {
+            @Override
+            protected void loadMoreItems() {
+                popularViewModel.loadMovies();
+            }
+
+            @Override
+            protected boolean isLastItem() {
+                return popularViewModel.isLastPage();
+            }
+
+            @Override
+            protected boolean isLoading() {
+                return popularViewModel.isDataLoading();
+            }
+        });
+        rvContainerNowPlaying.addOnScrollListener(new RecyclerViewMoviesPagination() {
+            @Override
+            protected void loadMoreItems() {
+                nowPlayingViewModel.loadMovies();
+            }
+
+            @Override
+            protected boolean isLastItem() {
+                return nowPlayingViewModel.isLastPage();
+            }
+
+            @Override
+            protected boolean isLoading() {
+                return nowPlayingViewModel.isDataLoading();
+            }
+        });
+        rvContainerTopRated.addOnScrollListener(new RecyclerViewMoviesPagination() {
+            @Override
+            protected void loadMoreItems() {
+                topRatedViewModel.loadMovies();
+            }
+
+            @Override
+            protected boolean isLastItem() {
+                return topRatedViewModel.isLastPage();
+            }
+
+            @Override
+            protected boolean isLoading() {
+                return topRatedViewModel.isDataLoading();
+            }
+        });
+        rvContainerUpcoming.addOnScrollListener(new RecyclerViewMoviesPagination() {
+            @Override
+            protected void loadMoreItems() {
+                upComingViewModel.loadMovies();
+            }
+
+            @Override
+            protected boolean isLastItem() {
+                return upComingViewModel.isLastPage();
+            }
+
+            @Override
+            protected boolean isLoading() {
+                return upComingViewModel.isDataLoading();
+            }
+        });
 
     }
 
