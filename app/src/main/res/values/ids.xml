@@ -21,4 +21,22 @@
     <item name="cvContainer" type="id" />
     <item name="tvItem" type="id" />
     <item name="rvContainerMovies" type="id" />
+    <item name="tvReleaseDate" type="id">tvReleaseDate</item>
+    <item name="rvGenreContainer" type="id">rvGenreContainer</item>
+    <item name="tvDescription" type="id">tvDescription</item>
+    <item name="rvCastContainer" type="id">rvCastContainer</item>
+    <item name="tvPhoto" type="id">tvPhoto</item>
+
+    <item name="llWebsite" type="id">llWebsite</item>
+    <item name="llImdb" type="id">llImdb</item>
+    <item name="llFacebook" type="id">llFacebook</item>
+    <item name="llTwitter" type="id">llTwitter</item>
+    <item name="llInstagram" type="id">llInstagram</item>
+    <item name="cvCast" type="id">cvCast</item>
+    <item name="ivCast" type="id">ivCast</item>
+    <item name="rvVideoContainer" type="id">rvVideoContainer</item>
+    <item name="rvReviewContainer" type="id">rvReviewContainer</item>
+    <item name="ivVideo" type="id">ivVideo</item>
+    <item name="flAvatar" type="id">flAvatar</item>
+    <item name="tvTitle" type="id">tvTitle</item>
 </resources>

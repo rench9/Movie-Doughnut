@@ -35,7 +35,7 @@ public class PosterViewModel extends ViewModel {
 
     public void posterClicked() {
         if (movie.get() != null && mNavigator != null && mNavigator.get() != null)
-            mNavigator.get().openMovieDetails(movie.get().getId());
+            mNavigator.get().openMovieDetails(movie.get());
     }
 
     @BindingAdapter({"ratingColor"})

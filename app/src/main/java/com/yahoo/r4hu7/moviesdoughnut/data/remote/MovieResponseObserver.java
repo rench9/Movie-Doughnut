@@ -8,6 +8,7 @@ import com.yahoo.r4hu7.moviesdoughnut.data.remote.response.MovieExternalIdsRespo
 import com.yahoo.r4hu7.moviesdoughnut.data.remote.response.MovieImagesResponse;
 import com.yahoo.r4hu7.moviesdoughnut.data.remote.response.MovieResponse;
 import com.yahoo.r4hu7.moviesdoughnut.data.remote.response.MovieReviewsResponse;
+import com.yahoo.r4hu7.moviesdoughnut.data.remote.response.MovieVideosResponse;
 import com.yahoo.r4hu7.moviesdoughnut.data.remote.response.MoviesSource;
 import com.yahoo.r4hu7.moviesdoughnut.data.remote.response.model.Backdrop;
 import com.yahoo.r4hu7.moviesdoughnut.data.remote.response.model.ImageSource;
@@ -46,6 +47,7 @@ public class MovieResponseObserver<T> implements MaybeObserver<T> {
                 loadItemCallback.onItemLoaded(getImageSources((MovieImagesResponse) t));
             else if (t instanceof MovieResponse ||
                     t instanceof MovieCreditsResponse ||
+                    t instanceof MovieVideosResponse ||
                     t instanceof MovieExternalIdsResponse)
                 loadItemCallback.onItemLoaded(t);
         } else if (t instanceof MoviesSource)
@@ -71,8 +73,8 @@ public class MovieResponseObserver<T> implements MaybeObserver<T> {
 
         List<ImageSource> l = new ArrayList<>();
         Backdrop i = movieImagesResponse.getBackdrops()[0];
-        movieImagesResponse.getBackdrops()[0] = movieImagesResponse.getBackdrops()[movieImagesResponse.getBackdrops().length];
-        movieImagesResponse.getBackdrops()[movieImagesResponse.getBackdrops().length] = i;
+        movieImagesResponse.getBackdrops()[0] = movieImagesResponse.getBackdrops()[movieImagesResponse.getBackdrops().length - 1];
+        movieImagesResponse.getBackdrops()[movieImagesResponse.getBackdrops().length - 1] = i;
         l.addAll(Arrays.asList(movieImagesResponse.getBackdrops()));
         l.addAll(Arrays.asList(movieImagesResponse.getPosters()));
 //        return l.toArray(new ImageSource[0]);

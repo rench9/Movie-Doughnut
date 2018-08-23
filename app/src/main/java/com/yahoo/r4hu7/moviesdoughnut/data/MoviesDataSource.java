@@ -4,6 +4,7 @@ import com.yahoo.r4hu7.moviesdoughnut.data.remote.response.MovieCreditsResponse;
 import com.yahoo.r4hu7.moviesdoughnut.data.remote.response.MovieExternalIdsResponse;
 import com.yahoo.r4hu7.moviesdoughnut.data.remote.response.MovieImagesResponse;
 import com.yahoo.r4hu7.moviesdoughnut.data.remote.response.MovieResponse;
+import com.yahoo.r4hu7.moviesdoughnut.data.remote.response.MovieVideosResponse;
 import com.yahoo.r4hu7.moviesdoughnut.data.remote.response.model.Movie;
 import com.yahoo.r4hu7.moviesdoughnut.data.remote.response.model.Review;
 
@@ -15,6 +16,8 @@ public interface MoviesDataSource {
     void getImages(int movieId, LoadItemCallback<MovieImagesResponse> callback);
 
     void getCast(int movieId, LoadItemCallback<MovieCreditsResponse> callback);
+
+    void getVideo(int movieId, LoadItemCallback<MovieVideosResponse> callback);
 
     void getReviews(int movieId, int page, LoadPagingItemCallback<Review[], Integer, Integer> callback);
 
@@ -29,6 +32,8 @@ public interface MoviesDataSource {
     void saveImages(MovieImagesResponse movieImagesResponse);
 
     void saveCast(MovieCreditsResponse movieCreditsResponse);
+
+    void saveVideo(MovieVideosResponse movieVideosResponse);
 
     void saveSortOrder(SortOrder[] sortOrders);
 

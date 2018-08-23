@@ -47,8 +47,8 @@ public class MoviesViewModel extends ViewModel {
             public void onItemLoaded(Movie[] movies, Integer page, Integer totalPages) {
                 MoviesViewModel.this.movies.addAll(Arrays.asList(movies));
                 MoviesViewModel.this.totalPages = totalPages;
-                dataLoading.set(false);
                 currentPage++;
+                dataLoading.set(false);
             }
 
             @Override

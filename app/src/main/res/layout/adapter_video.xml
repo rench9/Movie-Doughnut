@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+
+    <data>
+
+        <variable
+            name="vm"
+            type="com.yahoo.r4hu7.moviesdoughnut.ui.viewmodel.VideoViewModel" />
+    </data>
+
+    <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@id/cvCast"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:cardCornerRadius="@dimen/radius2"
+        app:cardElevation="@dimen/elevation2">
+
+        <FrameLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:foreground="@drawable/ic_youtube_round"
+            android:foregroundGravity="center">
+
+            <com.yahoo.r4hu7.moviesdoughnut.ui.dependency.BackdropImageView
+                android:id="@id/ivVideo"
+                videoImageSource="@{vm.video.key}"
+                android:layout_width="@dimen/video_w"
+                android:layout_height="match_parent" />
+        </FrameLayout>
+
+    </android.support.v7.widget.CardView>
+</layout>

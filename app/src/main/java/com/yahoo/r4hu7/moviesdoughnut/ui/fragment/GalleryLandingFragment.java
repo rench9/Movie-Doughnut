@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -51,6 +52,10 @@ public class GalleryLandingFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         FragmentGalleryLandingBinding binding = DataBindingUtil.inflate(inflater, R.layout.fragment_gallery_landing, container, false);
+        binding.setTopRatedVm(topRatedViewModel);
+        binding.setNowPlayingVm(nowPlayingViewModel);
+        binding.setPopularVm(popularViewModel);
+        binding.setUpComingVm(upComingViewModel);
 
         ButterKnife.bind(this, binding.getRoot());
         return binding.getRoot();
@@ -63,6 +68,7 @@ public class GalleryLandingFragment extends Fragment {
     }
 
     public void setNowPlayingViewModel(MoviesViewModel nowPlayingViewModel) {
+        Log.e("NOEPP", "SDS");
         this.nowPlayingViewModel = nowPlayingViewModel;
         this.nowPlayingViewModel.setSortOrder(SortOrder.NOWPLAYING);
         this.nowPlayingViewModel.loadMovies();
@@ -81,12 +87,18 @@ public class GalleryLandingFragment extends Fragment {
     }
 
     public void setPopularViewModel(MoviesViewModel popularViewModel) {
+
         this.popularViewModel = popularViewModel;
         this.popularViewModel.setSortOrder(SortOrder.POPULAR);
         this.popularViewModel.loadMovies();
+        Log.e("MOPIsad", String.valueOf(this.popularViewModel));
+
     }
 
     private void initRecyclerViews() {
+        Log.e("MOPI", String.valueOf(this.popularViewModel));
+        if (popularViewModel == null)
+            return;
 
         PosterCardAdapter popularMoviesAdapter = new PosterCardAdapter(popularViewModel.movies, (MovieNavigator) getActivity(), false);
         PosterCardAdapter nowPlayingMoviesAdapter = new PosterCardAdapter(nowPlayingViewModel.movies, (MovieNavigator) getActivity(), false);

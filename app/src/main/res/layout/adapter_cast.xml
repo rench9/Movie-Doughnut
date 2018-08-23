@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+
+    <data>
+
+        <variable
+            name="vm"
+            type="com.yahoo.r4hu7.moviesdoughnut.ui.viewmodel.CastViewModel" />
+    </data>
+
+    <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@id/cvCast"
+        android:layout_width="@dimen/cast_image_w"
+        android:layout_height="@dimen/cast_image_w"
+        app:cardCornerRadius="@dimen/cast_image_r"
+        app:cardElevation="@dimen/elevation0">
+
+        <com.yahoo.r4hu7.moviesdoughnut.ui.dependency.SquareImageView
+            android:id="@id/ivCast"
+            castImageSource="@{vm.cast.profile_path}"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </android.support.v7.widget.CardView>
+</layout>

@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+
+    <data>
+
+        <variable
+            name="vm"
+            type="com.yahoo.r4hu7.moviesdoughnut.ui.viewmodel.ReviewViewModel" />
+    </data>
+
+    <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@id/cvCast"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:cardBackgroundColor="@color/shade2"
+        app:cardCornerRadius="@dimen/radius2"
+        app:cardElevation="@dimen/elevation4"
+        app:contentPadding="@dimen/unit4">
+
+        <android.support.constraint.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <FrameLayout
+                android:id="@id/flAvatar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/unit2"
+                android:background="@drawable/shape_round"
+                android:backgroundTint="@color/transparent_black">
+
+                <TextView
+                    style="@style/typography_title_light"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="R"
+                    android:textStyle="bold" />
+            </FrameLayout>
+
+            <TextView
+                android:id="@id/tvTitle"
+                style="@style/typography_subheading"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/unit3"
+                android:ellipsize="end"
+                android:singleLine="true"
+                android:text="@{vm.review.author}"
+                app:layout_constraintBottom_toBottomOf="@id/flAvatar"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/flAvatar"
+                app:layout_constraintTop_toTopOf="@id/flAvatar" />
+
+            <TextView
+                style="@style/typography_body1"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/unit3"
+                android:layout_marginTop="@dimen/unit2"
+                android:ellipsize="end"
+                android:maxLines="4"
+                android:minLines="4"
+                android:text="@{vm.review.content}"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/flAvatar"
+                app:layout_constraintTop_toBottomOf="@id/tvTitle" />
+        </android.support.constraint.ConstraintLayout>
+    </android.support.v7.widget.CardView>
+</layout>

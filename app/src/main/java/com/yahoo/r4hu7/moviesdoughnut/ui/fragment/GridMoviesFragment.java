@@ -1,7 +1,5 @@
 package com.yahoo.r4hu7.moviesdoughnut.ui.fragment;
 
-
-import android.databinding.DataBindingUtil;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -12,7 +10,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.yahoo.r4hu7.moviesdoughnut.R;
-import com.yahoo.r4hu7.moviesdoughnut.databinding.FragmentGridMoviesBinding;
 import com.yahoo.r4hu7.moviesdoughnut.ui.dependency.RecyclerViewMoviesPagination;
 import com.yahoo.r4hu7.moviesdoughnut.ui.dependency.adapter.PosterCardAdapter;
 import com.yahoo.r4hu7.moviesdoughnut.ui.viewmodel.MoviesViewModel;
@@ -39,9 +36,9 @@ public class GridMoviesFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        FragmentGridMoviesBinding binding = DataBindingUtil.inflate(inflater, R.layout.fragment_grid_movies, container, false);
-        ButterKnife.bind(this, binding.getRoot());
-        return binding.getRoot();
+        View v = inflater.inflate(R.layout.fragment_grid_movies, container, false);
+        ButterKnife.bind(this, v);
+        return v;
     }
 
     @Override
@@ -51,6 +48,8 @@ public class GridMoviesFragment extends Fragment {
     }
 
     private void initRecyclerViews() {
+        if (moviesViewModel == null)
+            return;
         PosterCardAdapter adapter = new PosterCardAdapter(moviesViewModel.movies, (MovieNavigator) getActivity(), true);
         rvContainerMovies.setAdapter(adapter);
 
@@ -72,7 +71,6 @@ public class GridMoviesFragment extends Fragment {
                 return moviesViewModel.isDataLoading();
             }
         });
-
     }
 
     public void setMoviesViewModel(MoviesViewModel moviesViewModel) {

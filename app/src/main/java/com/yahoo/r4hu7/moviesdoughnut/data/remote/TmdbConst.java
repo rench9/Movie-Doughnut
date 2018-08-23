@@ -24,4 +24,8 @@ public class TmdbConst {
     public static String generateImageUrl(String imagePath, String imageSize) {
         return String.format("https://image.tmdb.org/t/p/%s%s", imageSize, imagePath);
     }
+
+    public static String generateYoutubeTubmnail(String videoId) {
+        return String.format("https://img.youtube.com/vi/%s/mqdefault.jpg", videoId);
+    }
 }

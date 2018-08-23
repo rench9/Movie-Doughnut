@@ -26,4 +26,8 @@ public class MovieExternalIdsResponse extends Response {
     public String getTwitter_id() {
         return twitter_id;
     }
+
+    public boolean isDataAvailable() {
+        return imdb_id != null || facebook_id != null || instagram_id != null || twitter_id != null;
+    }
 }

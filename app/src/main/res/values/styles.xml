@@ -15,11 +15,15 @@
         <item name="android:statusBarColor" tools:targetApi="lollipop">@color/grd_1_s</item>
     </style>
 
+    <style name="AppTheme.Dark" parent="AppTheme">
+        <item name="android:statusBarColor" tools:targetApi="lollipop">@color/shade10</item>
+    </style>
+
     <!-- Action bars & Tool bars-->
     <style name="AppTheme.ActionBar.Dark" parent="AppTheme">
         <item name="android:elevation" tools:targetApi="lollipop">0dp</item>
         <item name="elevation">0dp</item>
-        <item name="android:background">?attr/colorPrimary</item>
+        <item name="android:background">@color/shade10</item>
         <item name="android:toolbarStyle" tools:targetApi="lollipop">@style/AppTheme.ToolBar.Dark
         </item>
     </style>
@@ -33,7 +37,7 @@
     </style>
 
     <style name="AppTheme.ToolBar.Dark" parent="AppTheme">
-        <item name="android:background">?attr/colorPrimary</item>
+        <item name="android:background">@color/shade10</item>
         <item name="popupTheme">@style/ThemeOverlay.AppCompat.Dark</item>
         <item name="titleTextColor">@color/shade0</item>
     </style>

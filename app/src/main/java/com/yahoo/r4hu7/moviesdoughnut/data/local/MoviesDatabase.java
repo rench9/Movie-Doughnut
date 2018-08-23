@@ -10,8 +10,10 @@ import com.yahoo.r4hu7.moviesdoughnut.data.local.dao.MovieDetailDao;
 import com.yahoo.r4hu7.moviesdoughnut.data.remote.response.MovieResponse;
 import com.yahoo.r4hu7.moviesdoughnut.data.remote.response.model.Movie;
 
-@Database(entities = {Movie.class,
-        MovieResponse.class}, version = 1, exportSchema = true)
+@Database(entities = {
+        Movie.class,
+        MovieResponse.class
+}, version = 1, exportSchema = true)
 public abstract class MoviesDatabase extends RoomDatabase {
     private static MoviesDatabase INSTANCE;
 

@@ -75,5 +75,11 @@
     <dimen name="movie_card_w">116dp</dimen>
     <dimen name="no_height">0dp</dimen>
 
+    <dimen name="social_icon">36dp</dimen>
+
+    <dimen name="video_w">200dp</dimen>
+    <dimen name="cast_image_w">50dp</dimen>
+    <dimen name="cast_image_r">25dp</dimen>
+
 
 </resources>

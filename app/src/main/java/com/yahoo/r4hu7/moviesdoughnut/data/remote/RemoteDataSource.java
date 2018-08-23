@@ -10,6 +10,7 @@ import com.yahoo.r4hu7.moviesdoughnut.data.remote.response.MovieCreditsResponse;
 import com.yahoo.r4hu7.moviesdoughnut.data.remote.response.MovieExternalIdsResponse;
 import com.yahoo.r4hu7.moviesdoughnut.data.remote.response.MovieImagesResponse;
 import com.yahoo.r4hu7.moviesdoughnut.data.remote.response.MovieResponse;
+import com.yahoo.r4hu7.moviesdoughnut.data.remote.response.MovieVideosResponse;
 import com.yahoo.r4hu7.moviesdoughnut.data.remote.response.model.Movie;
 import com.yahoo.r4hu7.moviesdoughnut.data.remote.response.model.Review;
 
@@ -68,6 +69,11 @@ public class RemoteDataSource implements MoviesDataSource {
     }
 
     @Override
+    public void getVideo(int movieId, LoadItemCallback<MovieVideosResponse> callback) {
+        movies.getMovieVideos(movieId).subscribe(new MovieResponseObserver<>(callback));
+    }
+
+    @Override
     public void getReviews(int movieId, int page, LoadPagingItemCallback<Review[], Integer, Integer> callback) {
         movies.getMovieReviews(movieId, page).subscribe(new MovieResponseObserver<>(callback));
     }
@@ -100,6 +106,11 @@ public class RemoteDataSource implements MoviesDataSource {
     @Override
     public void saveCast(MovieCreditsResponse movieCreditsResponse) {
         localDataSource.saveCast(movieCreditsResponse);
+    }
+
+    @Override
+    public void saveVideo(MovieVideosResponse movieVideosResponse) {
+        localDataSource.saveVideo(movieVideosResponse);
     }
 
     @Override

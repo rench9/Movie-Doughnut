@@ -5,6 +5,7 @@ import android.animation.AnimatorListenerAdapter;
 import android.animation.AnimatorSet;
 import android.animation.ArgbEvaluator;
 import android.animation.ValueAnimator;
+import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.databinding.Observable;
 import android.databinding.ObservableBoolean;
@@ -25,6 +26,7 @@ import android.widget.FrameLayout;
 
 import com.yahoo.r4hu7.moviesdoughnut.R;
 import com.yahoo.r4hu7.moviesdoughnut.data.SortOrder;
+import com.yahoo.r4hu7.moviesdoughnut.data.remote.response.model.Movie;
 import com.yahoo.r4hu7.moviesdoughnut.di.DaggerRepositoryComponent;
 import com.yahoo.r4hu7.moviesdoughnut.di.module.ContextModule;
 import com.yahoo.r4hu7.moviesdoughnut.ui.dependency.SearchTextInputLayout;
@@ -83,7 +85,6 @@ public class GalleryActivity extends AppCompatActivity implements MovieNavigator
                 if (((ObservableBoolean) sender).get()) {
                     hideSearchBar();
                 } else {
-                    showLandingFragment();
                     hideSpinner();
                 }
             }
@@ -249,8 +250,8 @@ public class GalleryActivity extends AppCompatActivity implements MovieNavigator
         GalleryLandingFragment fragment = findOrCreateLandingFragment();
         fragment.setNowPlayingViewModel(findOrCreateMoviesViewModel(MOVIES_VM_NOW_PLAYING));
         fragment.setUpComingViewModel(findOrCreateMoviesViewModel(MOVIES_VM_UPCOMING));
-        fragment.setPopularViewModel(findOrCreateMoviesViewModel(MOVIES_VM_POPULAR));
         fragment.setTopRatedViewModel(findOrCreateMoviesViewModel(MOVIES_VM_TOPRATED));
+        fragment.setPopularViewModel(findOrCreateMoviesViewModel(MOVIES_VM_POPULAR));
         spnContainer.forceHide();
         searchInputLayout.forceVisible();
     }
@@ -261,8 +262,8 @@ public class GalleryActivity extends AppCompatActivity implements MovieNavigator
                 (GridMoviesFragment) getSupportFragmentManager().findFragmentByTag(GRID_MOVIES_FRAGMENT);
         if (fragment == null) {
             fragment = GridMoviesFragment.newInstance();
-            ActivityUtils.addFragmentToActivity(
-                    getSupportFragmentManager(), fragment, R.id.flContainer);
+//            getSupportFragmentManager().beginTransaction().replace(R.id.flContainer, fragment).commit();
+            ActivityUtils.addFragmentToActivity(getSupportFragmentManager(), fragment, R.id.flContainer);
         }
         return fragment;
     }
@@ -273,8 +274,8 @@ public class GalleryActivity extends AppCompatActivity implements MovieNavigator
                 (GalleryLandingFragment) getSupportFragmentManager().findFragmentByTag(LANDING_FRAGMENT);
         if (fragment == null) {
             fragment = GalleryLandingFragment.newInstance();
-            ActivityUtils.addFragmentToActivity(
-                    getSupportFragmentManager(), fragment, R.id.flContainer);
+//            getSupportFragmentManager().beginTransaction().replace(R.id.flContainer, fragment).commit();
+            ActivityUtils.addFragmentToActivity(getSupportFragmentManager(), fragment, R.id.flContainer);
         }
         return fragment;
     }
@@ -343,8 +344,12 @@ public class GalleryActivity extends AppCompatActivity implements MovieNavigator
     }
 
     @Override
-    public void openMovieDetails(int movieId) {
-
+    public void openMovieDetails(Movie movie) {
+        Bundle bundle = new Bundle();
+        Intent intent = new Intent(getApplicationContext(), DetailsActivity.class);
+        bundle.putParcelable(DetailsActivity.MOVIE_KEY, movie);
+        intent.putExtras(bundle);
+        startActivity(intent);
     }
 
     @Override
