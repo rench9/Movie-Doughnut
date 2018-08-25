@@ -5,6 +5,7 @@ import android.databinding.BindingAdapter;
 import android.databinding.ObservableField;
 import android.widget.ImageView;
 
+import com.yahoo.r4hu7.moviesdoughnut.R;
 import com.yahoo.r4hu7.moviesdoughnut.data.remote.TmdbConst;
 import com.yahoo.r4hu7.moviesdoughnut.data.remote.response.model.Video;
 import com.yahoo.r4hu7.moviesdoughnut.di.module.GlideApp;
@@ -20,6 +21,7 @@ public class VideoViewModel extends ViewModel {
         GlideApp.with(view)
                 .asBitmap()
                 .centerCrop()
+                .placeholder(R.drawable.placeholder_banner)
                 .load(TmdbConst.generateYoutubeTubmnail(image))
                 .into(view);
     }

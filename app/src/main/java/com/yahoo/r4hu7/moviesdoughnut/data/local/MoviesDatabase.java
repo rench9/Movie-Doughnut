@@ -13,7 +13,7 @@ import com.yahoo.r4hu7.moviesdoughnut.data.remote.response.model.Movie;
 @Database(entities = {
         Movie.class,
         MovieResponse.class
-}, version = 1, exportSchema = true)
+}, version = 1, exportSchema = false)
 public abstract class MoviesDatabase extends RoomDatabase {
     private static MoviesDatabase INSTANCE;
 

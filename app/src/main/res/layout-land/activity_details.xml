@@ -15,28 +15,23 @@
         android:layout_height="wrap_content"
         android:fitsSystemWindows="false">
 
-        <android.support.design.widget.CollapsingToolbarLayout
+        <android.support.v7.widget.Toolbar
+            android:id="@id/tbPrimary"
             android:layout_width="match_parent"
-            android:layout_height="150dp"
-            android:fitsSystemWindows="true"
-            app:contentScrim="@color/shade10"
-            app:layout_scrollFlags="scroll|exitUntilCollapsed">
-
-            <android.support.v7.widget.Toolbar
-                android:id="@id/tbPrimary"
-                android:layout_width="match_parent"
-                android:layout_height="?android:attr/actionBarSize"
-                app:layout_collapseMode="pin"
-                app:navigationIcon="@drawable/ic_back"
-                app:popupTheme="@style/AppTheme.PopupOverlay" />
-        </android.support.design.widget.CollapsingToolbarLayout>
+            android:layout_height="?android:attr/actionBarSize"
+            app:navigationIcon="@drawable/ic_back"
+            app:popupTheme="@style/AppTheme.PopupOverlay" />
 
     </android.support.design.widget.AppBarLayout>
 
     <FrameLayout
         android:id="@id/flContainer"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
+        android:background="@drawable/bg"
+        android:backgroundTint="@color/shade10"
+        android:clipChildren="false"
+        android:clipToPadding="false"
         app:behavior_overlapTop="90dp"
         app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 </android.support.design.widget.CoordinatorLayout>

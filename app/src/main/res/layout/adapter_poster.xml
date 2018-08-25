@@ -32,7 +32,7 @@
 
                 <com.yahoo.r4hu7.moviesdoughnut.ui.dependency.PosterImageView
                     android:id="@id/ivPoster"
-                    imageSource="@{vm.movie.poster_path}"
+                    posterImageSource="@{vm.movie.poster_path}"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/no_height"
                     android:adjustViewBounds="true" />

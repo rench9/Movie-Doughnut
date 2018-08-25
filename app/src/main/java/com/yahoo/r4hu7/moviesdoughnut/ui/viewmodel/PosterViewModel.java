@@ -51,11 +51,12 @@ public class PosterViewModel extends ViewModel {
         }
     }
 
-    @BindingAdapter({"imageSource"})
+    @BindingAdapter({"posterImageSource"})
     public static void setPoster(ImageView view, String image) {
         GlideApp.with(view)
                 .asBitmap()
                 .centerCrop()
+                .placeholder(R.drawable.placeholder_poster)
                 .load(TmdbConst.generateImageUrl(image, TmdbConst.POSTER_W_185))
                 .into(view);
     }

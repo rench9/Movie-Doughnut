@@ -27,6 +27,7 @@
             <android.support.v7.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/unit6"
                 android:layout_marginEnd="@dimen/unit4"
                 android:layout_marginStart="@dimen/unit4"
                 app:cardCornerRadius="@dimen/radius4"
@@ -84,18 +85,13 @@
                         android:text="@{vm.movie.release_date}" />
                 </RelativeLayout>
 
-                <android.support.v7.widget.RecyclerView
-                    android:id="@id/rvGenreContainer"
+                <TextView
+                    style="@style/typography_caption_bold"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="@dimen/unit6"
-                    android:clipChildren="false"
-                    android:clipToPadding="false"
-                    android:orientation="vertical"
-                    android:overScrollMode="never"
-                    app:layoutManager="android.support.v7.widget.LinearLayoutManager"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent" />
+                    android:text="@{vm.movieDetail.genres.length>0?vm.getGenreString():null}"
+                    android:visibility="@{vm.movieDetail.genres.length > 0?View.VISIBLE:View.GONE}" />
 
                 <TextView
                     style="@style/typography_subheading"
@@ -201,7 +197,7 @@
                             app:cardElevation="@dimen/elevation0">
 
                             <com.yahoo.r4hu7.moviesdoughnut.ui.dependency.SquareImageView
-                                backdropSource="@{vm.imageSources.size() > 0?vm.imageSources.get(1).file_path:null}"
+                                imageSource="@{vm.imageSources.size() > 0?vm.imageSources.get(1).file_path:null}"
                                 android:layout_width="match_parent"
                                 android:layout_height="@dimen/no_height" />
                         </android.support.v7.widget.CardView>
@@ -218,7 +214,7 @@
                             app:cardElevation="@dimen/elevation0">
 
                             <com.yahoo.r4hu7.moviesdoughnut.ui.dependency.SquareImageView
-                                backdropSource="@{vm.imageSources.size() > 0?vm.imageSources.get(2).file_path:null}"
+                                imageSource="@{vm.imageSources.size() > 0?vm.imageSources.get(2).file_path:null}"
                                 android:layout_width="match_parent"
                                 android:layout_height="@dimen/no_height" />
                         </android.support.v7.widget.CardView>
@@ -241,7 +237,7 @@
                             app:cardElevation="@dimen/elevation0">
 
                             <com.yahoo.r4hu7.moviesdoughnut.ui.dependency.SquareImageView
-                                backdropSource="@{vm.imageSources.size() > 0?vm.imageSources.get(3).file_path:null}"
+                                imageSource="@{vm.imageSources.size() > 0?vm.imageSources.get(3).file_path:null}"
                                 android:layout_width="match_parent"
                                 android:layout_height="@dimen/no_height" />
                         </android.support.v7.widget.CardView>
@@ -260,7 +256,7 @@
                             app:cardElevation="@dimen/elevation0">
 
                             <com.yahoo.r4hu7.moviesdoughnut.ui.dependency.SquareImageView
-                                backdropSource="@{vm.imageSources.size() > 0?vm.imageSources.get(4).file_path:null}"
+                                imageSource="@{vm.imageSources.size() > 0?vm.imageSources.get(4).file_path:null}"
                                 android:layout_width="match_parent"
                                 android:layout_height="@dimen/no_height" />
                         </android.support.v7.widget.CardView>
@@ -278,7 +274,7 @@
                             app:cardElevation="@dimen/elevation0">
 
                             <com.yahoo.r4hu7.moviesdoughnut.ui.dependency.SquareImageView
-                                backdropSource="@{vm.imageSources.size() > 0?vm.imageSources.get(5).file_path:null}"
+                                imageSource="@{vm.imageSources.size() > 0?vm.imageSources.get(5).file_path:null}"
                                 android:layout_width="match_parent"
                                 android:layout_height="@dimen/no_height" />
                         </android.support.v7.widget.CardView>
@@ -299,7 +295,7 @@
                                 android:layout_height="wrap_content">
 
                                 <com.yahoo.r4hu7.moviesdoughnut.ui.dependency.SquareImageView
-                                    backdropSource="@{vm.imageSources.size() > 0?vm.imageSources.get(6).file_path:null}"
+                                    imageSource="@{vm.imageSources.size() > 0?vm.imageSources.get(6).file_path:null}"
                                     android:layout_width="match_parent"
                                     android:layout_height="@dimen/no_height" />
 

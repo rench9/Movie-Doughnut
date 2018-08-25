@@ -57,6 +57,12 @@ public class GalleryActivity extends AppCompatActivity implements MovieNavigator
 
     private GalleryActivityViewModel activityViewModel;
 
+    private MoviesViewModel gridMoviesViewModel;
+
+    private Observable.OnPropertyChangedCallback fragmentSwitcherCallback;
+
+    private Menu mMenu;
+
     @BindView(R.id.tbPrimary)
     Toolbar toolbar;
     @BindView(R.id.tilSearch)
@@ -67,42 +73,50 @@ public class GalleryActivity extends AppCompatActivity implements MovieNavigator
     SortOrderSpinner spnContainer;
     @BindView(R.id.flContainer)
     FrameLayout flContainer;
+    private int count = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_gallery);
         ButterKnife.bind(this);
-
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         initFilterSpinner();
 
+        if (fragmentSwitcherCallback == null)
+            fragmentSwitcherCallback = new Observable.OnPropertyChangedCallback() {
+                @Override
+                public void onPropertyChanged(Observable sender, int propertyId) {
+                    if (((ObservableBoolean) sender).get()) {
+                        showSearchOption();
+                        showGridFragment();
+                        hideSearchBar();
+                    } else {
+                        hideSearchOption();
+                        showLandingFragment();
+                        showSearchBar();
+                    }
+                }
+            };
+
         activityViewModel = findOrCreateGalleryActivityViewModel();
-        activityViewModel.gridView.addOnPropertyChangedCallback(new Observable.OnPropertyChangedCallback() {
+        activityViewModel.gridView.addOnPropertyChangedCallback(fragmentSwitcherCallback);
+
+        activityViewModel.moviesFilter.addOnPropertyChangedCallback(new Observable.OnPropertyChangedCallback() {
             @Override
             public void onPropertyChanged(Observable sender, int propertyId) {
-                if (((ObservableBoolean) sender).get()) {
-                    hideSearchBar();
-                } else {
-                    hideSpinner();
-                }
+                showGridFragment();
             }
         });
 
         if (activityViewModel.gridView.get()) {
             showGridFragment();
+            hideSearchBar();
         } else {
             showLandingFragment();
+            showSearchBar();
         }
-
-
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.gallery, menu);
-        return super.onCreateOptionsMenu(menu);
     }
 
     @Override
@@ -133,6 +147,25 @@ public class GalleryActivity extends AppCompatActivity implements MovieNavigator
         spnContainer.setAdapter(new SortSpinnerAdapter(this, R.layout.adapter_spinner, filters));
         spnContainer.setOnItemSelectedListener(this);
 
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.gallery, menu);
+        mMenu = menu;
+        if (activityViewModel.gridView.get()) {
+            menu.findItem(R.id.actionSearch).setVisible(true);
+            menu.findItem(R.id.actionFilter).setVisible(false);
+        } else {
+            menu.findItem(R.id.actionSearch).setVisible(false);
+            menu.findItem(R.id.actionFilter).setVisible(true);
+        }
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    protected void hideSearchOption() {
+        mMenu.findItem(R.id.actionSearch).setVisible(false);
+        mMenu.findItem(R.id.actionFilter).setVisible(true);
     }
 
     private void hideSearchBar() {
@@ -177,15 +210,17 @@ public class GalleryActivity extends AppCompatActivity implements MovieNavigator
                 super.onAnimationEnd(animation);
                 searchInputLayout.forceHide();
                 spnContainer.forceVisible();
-                toolbar.getMenu().findItem(R.id.actionSearch).setVisible(true);
-                toolbar.getMenu().findItem(R.id.actionFilter).setVisible(false);
-                showGridFragment();
             }
         });
         animatorSet.start();
     }
 
-    private void hideSpinner() {
+    private void showSearchOption() {
+        mMenu.findItem(R.id.actionSearch).setVisible(true);
+        mMenu.findItem(R.id.actionFilter).setVisible(false);
+    }
+
+    private void showSearchBar() {
         ValueAnimator anim = ValueAnimator.ofInt(searchInputLayout.getMeasuredWidth(), getResources().getDimensionPixelSize(R.dimen.search_bar_w));
         anim.addUpdateListener(valueAnimator -> {
             int val = (Integer) valueAnimator.getAnimatedValue();
@@ -231,19 +266,11 @@ public class GalleryActivity extends AppCompatActivity implements MovieNavigator
             @Override
             public void onAnimationEnd(Animator animation) {
                 super.onAnimationEnd(animation);
-                toolbar.getMenu().findItem(R.id.actionSearch).setVisible(false);
-                toolbar.getMenu().findItem(R.id.actionFilter).setVisible(true);
-                showLandingFragment();
+                searchInputLayout.forceVisible();
+                spnContainer.forceHide();
             }
         });
         animatorSet.start();
-    }
-
-    private void showGridFragment() {
-        GridMoviesFragment fragment = findOrCreateGridFragment();
-        fragment.setMoviesViewModel(findOrCreateMoviesViewModel(MOVIES_VM_POPULAR));
-        spnContainer.forceVisible();
-        searchInputLayout.forceHide();
     }
 
     private void showLandingFragment() {
@@ -252,8 +279,13 @@ public class GalleryActivity extends AppCompatActivity implements MovieNavigator
         fragment.setUpComingViewModel(findOrCreateMoviesViewModel(MOVIES_VM_UPCOMING));
         fragment.setTopRatedViewModel(findOrCreateMoviesViewModel(MOVIES_VM_TOPRATED));
         fragment.setPopularViewModel(findOrCreateMoviesViewModel(MOVIES_VM_POPULAR));
-        spnContainer.forceHide();
-        searchInputLayout.forceVisible();
+    }
+
+    private void showGridFragment() {
+        if (gridMoviesViewModel == null)
+            gridMoviesViewModel = findOrCreateMoviesViewModel(MOVIES_VM);
+        GridMoviesFragment fragment = findOrCreateGridFragment();
+        fragment.setMoviesViewModel(gridMoviesViewModel);
     }
 
     @NonNull
@@ -262,20 +294,7 @@ public class GalleryActivity extends AppCompatActivity implements MovieNavigator
                 (GridMoviesFragment) getSupportFragmentManager().findFragmentByTag(GRID_MOVIES_FRAGMENT);
         if (fragment == null) {
             fragment = GridMoviesFragment.newInstance();
-//            getSupportFragmentManager().beginTransaction().replace(R.id.flContainer, fragment).commit();
-            ActivityUtils.addFragmentToActivity(getSupportFragmentManager(), fragment, R.id.flContainer);
-        }
-        return fragment;
-    }
-
-    @NonNull
-    private GalleryLandingFragment findOrCreateLandingFragment() {
-        GalleryLandingFragment fragment =
-                (GalleryLandingFragment) getSupportFragmentManager().findFragmentByTag(LANDING_FRAGMENT);
-        if (fragment == null) {
-            fragment = GalleryLandingFragment.newInstance();
-//            getSupportFragmentManager().beginTransaction().replace(R.id.flContainer, fragment).commit();
-            ActivityUtils.addFragmentToActivity(getSupportFragmentManager(), fragment, R.id.flContainer);
+            ActivityUtils.addFragmentToActivity(getSupportFragmentManager(), fragment, R.id.flContainer, GRID_MOVIES_FRAGMENT);
         }
         return fragment;
     }
@@ -284,7 +303,6 @@ public class GalleryActivity extends AppCompatActivity implements MovieNavigator
     private GalleryActivityViewModel findOrCreateGalleryActivityViewModel() {
         // In a configuration change we might have a ViewModel present. It's retained using the
         // Fragment Manager.
-        @SuppressWarnings("unchecked")
         ViewModelHolder<GalleryActivityViewModel> retainedViewModel =
                 (ViewModelHolder<GalleryActivityViewModel>) getSupportFragmentManager()
                         .findFragmentByTag(ACTIVITY_GALLERY_VM);
@@ -330,12 +348,15 @@ public class GalleryActivity extends AppCompatActivity implements MovieNavigator
         }
     }
 
-    @Override
-    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-        if (adapterView.getSelectedItem() instanceof Filter) {
-            Filter f = (Filter) adapterView.getSelectedItem();
-            /*TODO change sort order*/
+    @NonNull
+    private GalleryLandingFragment findOrCreateLandingFragment() {
+        GalleryLandingFragment fragment =
+                (GalleryLandingFragment) getSupportFragmentManager().findFragmentByTag(LANDING_FRAGMENT);
+        if (fragment == null) {
+            fragment = GalleryLandingFragment.newInstance();
+            ActivityUtils.addFragmentToActivity(getSupportFragmentManager(), fragment, R.id.flContainer, LANDING_FRAGMENT);
         }
+        return fragment;
     }
 
     @Override
@@ -360,5 +381,14 @@ public class GalleryActivity extends AppCompatActivity implements MovieNavigator
     @Override
     public void goBack() {
 
+    }
+
+    @Override
+    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+        if (adapterView.getSelectedItem() instanceof Filter) {
+            Filter f = (Filter) adapterView.getSelectedItem();
+            gridMoviesViewModel.setSortOrder(f.getSortOrder());
+            gridMoviesViewModel.loadMovies();
+        }
     }
 }

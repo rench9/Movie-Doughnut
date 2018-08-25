@@ -6,10 +6,12 @@ import android.databinding.ObservableArrayList;
 import android.databinding.ObservableBoolean;
 import android.databinding.ObservableField;
 import android.databinding.ObservableList;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 
+import com.yahoo.r4hu7.moviesdoughnut.R;
 import com.yahoo.r4hu7.moviesdoughnut.data.MoviesDataSource;
 import com.yahoo.r4hu7.moviesdoughnut.data.MoviesRepository;
 import com.yahoo.r4hu7.moviesdoughnut.data.remote.TmdbConst;
@@ -26,7 +28,9 @@ import com.yahoo.r4hu7.moviesdoughnut.data.remote.response.model.Review;
 import com.yahoo.r4hu7.moviesdoughnut.data.remote.response.model.Video;
 import com.yahoo.r4hu7.moviesdoughnut.di.module.GlideApp;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 public class MovieDetailViewModel extends ViewModel {
     private final ObservableBoolean dataLoading = new ObservableBoolean(false);
@@ -51,7 +55,8 @@ public class MovieDetailViewModel extends ViewModel {
     public static void setPosterImage(ImageView view, String image) {
         GlideApp.with(view)
                 .asBitmap()
-                .centerCrop()
+                .fitCenter()
+                .placeholder(R.drawable.placeholder_poster)
                 .load(TmdbConst.generateImageUrl(image, TmdbConst.POSTER_W_185))
                 .into(view);
     }
@@ -61,6 +66,17 @@ public class MovieDetailViewModel extends ViewModel {
         GlideApp.with(view)
                 .asBitmap()
                 .centerCrop()
+                .placeholder(R.drawable.placeholder_banner)
+                .load(TmdbConst.generateImageUrl(image, TmdbConst.BACKDROP_W_300))
+                .into(view);
+    }
+
+    @BindingAdapter({"imageSource"})
+    public static void setGalleryImage(ImageView view, String image) {
+        GlideApp.with(view)
+                .asBitmap()
+                .centerCrop()
+                .placeholder(R.drawable.placeholder_square)
                 .load(TmdbConst.generateImageUrl(image, TmdbConst.BACKDROP_W_300))
                 .into(view);
     }
@@ -182,6 +198,14 @@ public class MovieDetailViewModel extends ViewModel {
                 dataLoading.set(false);
             }
         });
+    }
+
+    public String getGenreString() {
+        List<String> l = new ArrayList<>();
+        for (Item i : movieDetail.get().genres) {
+            l.add(i.getName());
+        }
+        return TextUtils.join("  \u25CF  ", l);
     }
 
     public void linkClicked(View v, String url) {

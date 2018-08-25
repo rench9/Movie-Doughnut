@@ -21,7 +21,6 @@ public class PosterImageView extends AppCompatImageView {
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
         setMeasuredDimension(widthMeasureSpec, (int) Math.round(widthMeasureSpec * ASPECTRATIO));
     }
 

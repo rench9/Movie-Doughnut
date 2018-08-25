@@ -4,8 +4,8 @@
     <item
         android:id="@id/actionFav"
         android:background="#f000"
-        android:icon="@drawable/ic_grid"
-        android:title="Grid Layout"
+        android:icon="@drawable/like_fill"
+        android:title="Favourites"
         app:showAsAction="always" />
     <item
         android:id="@id/actionFilter"

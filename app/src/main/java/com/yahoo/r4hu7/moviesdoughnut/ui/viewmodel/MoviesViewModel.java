@@ -34,6 +34,7 @@ public class MoviesViewModel extends ViewModel {
 
     public void setSortOrder(int sortOrder) {
         this.sortOrder = sortOrder;
+        movies.clear();
     }
 
     public void loadMovies() {

@@ -48,8 +48,6 @@ public class GridMoviesFragment extends Fragment {
     }
 
     private void initRecyclerViews() {
-        if (moviesViewModel == null)
-            return;
         PosterCardAdapter adapter = new PosterCardAdapter(moviesViewModel.movies, (MovieNavigator) getActivity(), true);
         rvContainerMovies.setAdapter(adapter);
 

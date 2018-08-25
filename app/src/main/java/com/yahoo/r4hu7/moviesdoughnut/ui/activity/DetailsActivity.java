@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.AppBarLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 
 import com.yahoo.r4hu7.moviesdoughnut.R;
 import com.yahoo.r4hu7.moviesdoughnut.di.DaggerRepositoryComponent;
@@ -37,6 +38,7 @@ public class DetailsActivity extends AppCompatActivity {
         ButterKnife.bind(this);
         setSupportActionBar(tbPrimary);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         viewModel = findOrCreateMovieDetailViewModel();
         viewModel.movie.set(getIntent().getExtras().getParcelable(MOVIE_KEY));
         viewModel.loadMovieDetail();
@@ -47,6 +49,16 @@ public class DetailsActivity extends AppCompatActivity {
         viewModel.loadExternalIds();
         MovieDetailFragment fragment = findOrCreateDetailFragment();
         fragment.setViewModel(viewModel);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                break;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @NonNull
@@ -73,15 +85,13 @@ public class DetailsActivity extends AppCompatActivity {
         }
     }
 
-
     @NonNull
     private MovieDetailFragment findOrCreateDetailFragment() {
         MovieDetailFragment fragment =
                 (MovieDetailFragment) getSupportFragmentManager().findFragmentByTag(DETAIL_FRAGMENT);
         if (fragment == null) {
             fragment = MovieDetailFragment.newInstance();
-//            getSupportFragmentManager().beginTransaction().replace(R.id.flContainer, fragment).commit();
-            ActivityUtils.addFragmentToActivity(getSupportFragmentManager(), fragment, R.id.flContainer);
+            ActivityUtils.addFragmentToActivity(getSupportFragmentManager(), fragment, R.id.flContainer, DETAIL_FRAGMENT);
         }
         return fragment;
     }

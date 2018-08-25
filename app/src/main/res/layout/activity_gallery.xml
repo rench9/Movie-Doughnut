@@ -78,7 +78,6 @@
             android:layout_height="@dimen/search_bar_h"
             android:background="@drawable/shape_round_rect"
             android:backgroundTint="@color/sky_blue_s2"
-            android:gravity="center"
             android:visibility="visible"
             app:hintEnabled="false"
             app:hintTextAppearance="@style/typography_button"

@@ -1,0 +1,519 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+
+    <data>
+
+        <import type="android.view.View" />
+
+        <variable
+            name="vm"
+            type="com.yahoo.r4hu7.moviesdoughnut.ui.viewmodel.MovieDetailViewModel" />
+    </data>
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="@dimen/unit5"
+        android:layout_marginEnd="@dimen/unit5"
+        android:layout_marginStart="@dimen/unit5"
+        android:clipChildren="false"
+        android:clipToPadding="false"
+        android:orientation="horizontal"
+        tools:context=".ui.fragment.MovieDetailFragment">
+
+        <android.support.v7.widget.CardView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:clipChildren="false"
+            android:clipToPadding="false"
+            app:cardCornerRadius="@dimen/radius1"
+            app:cardElevation="@dimen/elevation4">
+
+            <ImageView
+                android:id="@id/ivPoster"
+                posterSource="@{vm.movie.poster_path}"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:adjustViewBounds="true" />
+        </android.support.v7.widget.CardView>
+
+        <Space
+            android:layout_width="@dimen/unit3"
+            android:layout_height="wrap_content" />
+
+        <android.support.v7.widget.CardView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:clipChildren="false"
+            android:clipToPadding="false"
+            app:cardCornerRadius="@dimen/radius1"
+            app:cardElevation="@dimen/elevation4">
+
+
+            <android.support.v4.widget.NestedScrollView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:clipChildren="false"
+                    android:clipToPadding="false"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginEnd="@dimen/unit5"
+                        android:layout_marginStart="@dimen/unit5"
+                        android:clipChildren="false"
+                        android:clipToPadding="false"
+                        android:orientation="vertical">
+
+                        <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="@dimen/unit6"
+                            android:layout_marginTop="@dimen/unit6">
+
+                            <TextView
+                                android:id="@id/tvMovieName"
+                                style="@style/typography_title"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentStart="true"
+                                android:layout_toStartOf="@id/tvDuration"
+                                android:text="@{vm.movie.title}" />
+
+                            <TextView
+                                android:id="@id/tvDuration"
+                                style="@style/typography_subheading"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentEnd="true"
+                                android:layout_marginStart="@dimen/unit2"
+                                android:text="@{vm.movieDetail.runtime+` min`}"
+                                android:textColor="@color/rating_high"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:id="@id/tvReleaseDate"
+                                style="@style/typography_body1"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_below="@id/tvMovieName"
+                                android:text="@{vm.movie.release_date}" />
+                        </RelativeLayout>
+
+                        <TextView
+                            style="@style/typography_caption_bold"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="@dimen/unit6"
+                            android:text="@{vm.movieDetail.genres.length>0?vm.getGenreString():null}"
+                            android:visibility="@{vm.movieDetail.genres.length > 0?View.VISIBLE:View.GONE}" />
+
+                        <TextView
+                            style="@style/typography_subheading"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="@dimen/unit6"
+                            android:text="Description"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@id/tvDescription"
+                            style="@style/typography_body1"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="@dimen/unit6"
+                            android:ellipsize="end"
+                            android:maxLines="5"
+                            android:text="@{vm.movie.overview}" />
+
+                        <TextView
+                            style="@style/typography_subheading"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="@dimen/unit6"
+                            android:text="Cast"
+                            android:textStyle="bold"
+                            android:visibility="@{vm.casts.isEmpty()?View.GONE:View.VISIBLE}" />
+
+                        <android.support.v7.widget.RecyclerView
+                            android:id="@id/rvCastContainer"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="@dimen/unit6"
+                            android:clipChildren="false"
+                            android:clipToPadding="false"
+                            android:nestedScrollingEnabled="false"
+                            android:orientation="horizontal"
+                            android:overScrollMode="never"
+                            android:visibility="@{vm.casts.isEmpty()?View.GONE:View.VISIBLE}"
+                            app:layoutManager="android.support.v7.widget.LinearLayoutManager"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent" />
+
+                        <RelativeLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="@dimen/unit6">
+
+                            <TextView
+                                android:id="@id/tvPhoto"
+                                style="@style/typography_subheading"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentStart="true"
+                                android:text="Photos"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                style="@style/typography_exponent"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentTop="true"
+                                android:layout_toEndOf="@id/tvPhoto"
+                                android:text="@{` +`+vm.imageSources.size()}"
+                                android:textColor="@color/shade8"
+                                android:textStyle="normal" />
+                        </RelativeLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="@dimen/unit6"
+                            android:orientation="vertical">
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal">
+
+                                <android.support.v7.widget.CardView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:layout_weight="2"
+                                    app:cardCornerRadius="@dimen/radius1"
+                                    app:cardElevation="@dimen/elevation0">
+
+                                    <ImageView
+                                        backdropSource="@{vm.imageSources.size() > 0?vm.imageSources.get(0).file_path:null}"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="match_parent" />
+                                </android.support.v7.widget.CardView>
+
+
+                                <Space
+                                    android:layout_width="@dimen/unit2"
+                                    android:layout_height="wrap_content" />
+
+                                <android.support.v7.widget.CardView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="3"
+                                    app:cardCornerRadius="@dimen/radius1"
+                                    app:cardElevation="@dimen/elevation0">
+
+                                    <com.yahoo.r4hu7.moviesdoughnut.ui.dependency.SquareImageView
+                                        imageSource="@{vm.imageSources.size() > 0?vm.imageSources.get(1).file_path:null}"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="@dimen/no_height" />
+                                </android.support.v7.widget.CardView>
+
+                                <Space
+                                    android:layout_width="@dimen/unit2"
+                                    android:layout_height="wrap_content" />
+
+                                <android.support.v7.widget.CardView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="3"
+                                    app:cardCornerRadius="@dimen/radius1"
+                                    app:cardElevation="@dimen/elevation0">
+
+                                    <com.yahoo.r4hu7.moviesdoughnut.ui.dependency.SquareImageView
+                                        imageSource="@{vm.imageSources.size() > 0?vm.imageSources.get(2).file_path:null}"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="@dimen/no_height" />
+                                </android.support.v7.widget.CardView>
+                            </LinearLayout>
+
+                            <Space
+                                android:layout_width="wrap_content"
+                                android:layout_height="@dimen/unit2" />
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal">
+
+                                <android.support.v7.widget.CardView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    app:cardCornerRadius="@dimen/radius1"
+                                    app:cardElevation="@dimen/elevation0">
+
+                                    <com.yahoo.r4hu7.moviesdoughnut.ui.dependency.SquareImageView
+                                        imageSource="@{vm.imageSources.size() > 0?vm.imageSources.get(3).file_path:null}"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="@dimen/no_height" />
+                                </android.support.v7.widget.CardView>
+
+
+                                <Space
+                                    android:layout_width="@dimen/unit2"
+                                    android:layout_height="wrap_content" />
+
+
+                                <android.support.v7.widget.CardView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    app:cardCornerRadius="@dimen/radius1"
+                                    app:cardElevation="@dimen/elevation0">
+
+                                    <com.yahoo.r4hu7.moviesdoughnut.ui.dependency.SquareImageView
+                                        imageSource="@{vm.imageSources.size() > 0?vm.imageSources.get(4).file_path:null}"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="@dimen/no_height" />
+                                </android.support.v7.widget.CardView>
+
+                                <Space
+                                    android:layout_width="@dimen/unit2"
+                                    android:layout_height="wrap_content" />
+
+
+                                <android.support.v7.widget.CardView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    app:cardCornerRadius="@dimen/radius1"
+                                    app:cardElevation="@dimen/elevation0">
+
+                                    <com.yahoo.r4hu7.moviesdoughnut.ui.dependency.SquareImageView
+                                        imageSource="@{vm.imageSources.size() > 0?vm.imageSources.get(5).file_path:null}"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="@dimen/no_height" />
+                                </android.support.v7.widget.CardView>
+
+                                <Space
+                                    android:layout_width="@dimen/unit2"
+                                    android:layout_height="wrap_content" />
+
+                                <android.support.v7.widget.CardView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    app:cardCornerRadius="@dimen/radius1"
+                                    app:cardElevation="@dimen/elevation0">
+
+                                    <FrameLayout
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content">
+
+                                        <com.yahoo.r4hu7.moviesdoughnut.ui.dependency.SquareImageView
+                                            imageSource="@{vm.imageSources.size() > 0?vm.imageSources.get(6).file_path:null}"
+                                            android:layout_width="match_parent"
+                                            android:layout_height="@dimen/no_height" />
+
+                                        <ImageView
+                                            android:layout_width="match_parent"
+                                            android:layout_height="match_parent"
+                                            android:background="@color/transparent_black"
+                                            android:scaleType="center"
+                                            android:src="@drawable/ic_more" />
+                                    </FrameLayout>
+                                </android.support.v7.widget.CardView>
+
+                            </LinearLayout>
+                        </LinearLayout>
+
+                        <TextView
+                            style="@style/typography_subheading"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="@dimen/unit6"
+                            android:text="Videos"
+                            android:textStyle="bold"
+                            android:visibility="@{vm.videos.isEmpty()?View.GONE:View.VISIBLE}" />
+
+                        <android.support.v7.widget.RecyclerView
+                            android:id="@id/rvVideoContainer"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="@dimen/unit6"
+                            android:clipChildren="false"
+                            android:clipToPadding="false"
+                            android:nestedScrollingEnabled="false"
+                            android:orientation="horizontal"
+                            android:overScrollMode="never"
+                            android:visibility="@{vm.videos.isEmpty()?View.GONE:View.VISIBLE}"
+                            app:layoutManager="android.support.v7.widget.LinearLayoutManager" />
+
+                        <TextView
+                            style="@style/typography_subheading"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="@dimen/unit6"
+                            android:text="Reviews"
+                            android:textStyle="bold"
+                            android:visibility="@{vm.reviews.isEmpty()?View.GONE:View.VISIBLE}" />
+
+                        <android.support.v7.widget.RecyclerView
+                            android:id="@id/rvReviewContainer"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="@dimen/unit6"
+                            android:clipChildren="false"
+                            android:clipToPadding="false"
+                            android:nestedScrollingEnabled="false"
+                            android:orientation="horizontal"
+                            android:overScrollMode="never"
+                            android:visibility="@{vm.reviews.isEmpty()?View.GONE:View.VISIBLE}"
+                            app:layoutManager="android.support.v7.widget.LinearLayoutManager" />
+
+                        <TextView
+                            style="@style/typography_subheading"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="@dimen/unit6"
+                            android:text="Stay Connected"
+                            android:textStyle="bold"
+                            android:visibility="@{vm.externalIds.isDataAvailable()||vm.movieDetail.homepage!=null?View.VISIBLE:View.GONE}" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="@dimen/unit6"
+                            android:orientation="horizontal"
+                            android:visibility="@{vm.externalIds.isDataAvailable()||vm.movieDetail.homepage!=null?View.VISIBLE:View.GONE}">
+
+                            <LinearLayout
+                                android:id="@id/llWebsite"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:clickable="true"
+                                android:foreground="?android:attr/selectableItemBackground"
+                                android:gravity="center"
+                                android:onClick="@{(v)->vm.linkClicked(v,vm.movieDetail.homepage)}"
+                                android:orientation="vertical"
+                                android:visibility="@{vm.movieDetail.homepage!=null?View.VISIBLE:View.GONE}">
+
+                                <com.yahoo.r4hu7.moviesdoughnut.ui.dependency.SquareImageView
+                                    android:layout_width="@dimen/social_icon"
+                                    android:layout_height="@dimen/no_height"
+                                    android:src="@drawable/ic_web" />
+
+                                <TextView
+                                    style="@style/typography_caption_bold"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="Website" />
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:id="@id/llImdb"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:clickable="true"
+                                android:foreground="?android:attr/selectableItemBackground"
+                                android:gravity="center"
+                                android:onClick="@{(v)->vm.linkClicked(v,vm.externalIds.imdb_id)}"
+                                android:orientation="vertical"
+                                android:visibility="@{vm.externalIds.imdb_id!=null?View.VISIBLE:View.GONE}">
+
+                                <com.yahoo.r4hu7.moviesdoughnut.ui.dependency.SquareImageView
+                                    android:layout_width="@dimen/social_icon"
+                                    android:layout_height="@dimen/no_height"
+                                    android:src="@drawable/ic_imdb" />
+
+                                <TextView
+                                    style="@style/typography_caption_bold"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="IMDB" />
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:id="@id/llFacebook"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:gravity="center"
+                                android:onClick="@{(v)->vm.linkClicked(v,vm.externalIds.facebook_id)}"
+                                android:orientation="vertical"
+                                android:visibility="@{vm.externalIds.facebook_id!=null?View.VISIBLE:View.GONE}">
+
+                                <com.yahoo.r4hu7.moviesdoughnut.ui.dependency.SquareImageView
+                                    android:layout_width="@dimen/social_icon"
+                                    android:layout_height="@dimen/no_height"
+                                    android:src="@drawable/ic_fb" />
+
+                                <TextView
+                                    style="@style/typography_caption_bold"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@{vm.externalIds.facebook_id}" />
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:id="@id/llTwitter"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:gravity="center"
+                                android:onClick="@{(v)->vm.linkClicked(v,vm.externalIds.twitter_id)}"
+                                android:orientation="vertical"
+                                android:visibility="@{vm.externalIds.twitter_id!=null?View.VISIBLE:View.GONE}">
+
+                                <com.yahoo.r4hu7.moviesdoughnut.ui.dependency.SquareImageView
+                                    android:layout_width="@dimen/social_icon"
+                                    android:layout_height="@dimen/no_height"
+                                    android:src="@drawable/ic_twitter" />
+
+                                <TextView
+                                    style="@style/typography_caption_bold"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@{vm.externalIds.twitter_id}" />
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:id="@id/llInstagram"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:gravity="center"
+                                android:onClick="@{(v)->vm.linkClicked(v,vm.externalIds.instagram_id)}"
+                                android:orientation="vertical"
+                                android:visibility="@{vm.externalIds.instagram_id!=null?View.VISIBLE:View.GONE}">
+
+                                <com.yahoo.r4hu7.moviesdoughnut.ui.dependency.SquareImageView
+                                    android:layout_width="@dimen/social_icon"
+                                    android:layout_height="@dimen/no_height"
+                                    android:src="@drawable/ic_instagram" />
+
+                                <TextView
+                                    style="@style/typography_caption_bold"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@{vm.externalIds.instagram_id}" />
+                            </LinearLayout>
+                        </LinearLayout>
+                    </LinearLayout>
+                </LinearLayout>
+
+            </android.support.v4.widget.NestedScrollView>
+        </android.support.v7.widget.CardView>
+
+    </LinearLayout>
+
+</layout>

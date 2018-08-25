@@ -29,12 +29,12 @@ public class PosterCardAdapter extends RecyclerView.Adapter<PosterCardAdapter.Vi
         movies.addOnListChangedCallback(new ObservableList.OnListChangedCallback<ObservableList<Movie>>() {
             @Override
             public void onChanged(ObservableList<Movie> sender) {
-
+                notifyDataSetChanged();
             }
 
             @Override
             public void onItemRangeChanged(ObservableList<Movie> sender, int positionStart, int itemCount) {
-
+                notifyItemRangeChanged(positionStart, itemCount);
             }
 
             @Override
@@ -44,12 +44,13 @@ public class PosterCardAdapter extends RecyclerView.Adapter<PosterCardAdapter.Vi
 
             @Override
             public void onItemRangeMoved(ObservableList<Movie> sender, int fromPosition, int toPosition, int itemCount) {
+                notifyItemRangeChanged(fromPosition, itemCount);
 
             }
 
             @Override
             public void onItemRangeRemoved(ObservableList<Movie> sender, int positionStart, int itemCount) {
-
+                notifyItemRangeRemoved(positionStart, itemCount);
             }
         });
     }

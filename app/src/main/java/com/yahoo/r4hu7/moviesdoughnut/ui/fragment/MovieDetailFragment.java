@@ -24,18 +24,15 @@ public class MovieDetailFragment extends Fragment {
 
     @BindView(R.id.rvCastContainer)
     RecyclerView rvCastContainer;
-
-    public static MovieDetailFragment newInstance() {
-        return new MovieDetailFragment();
-    }
-
-    @BindView(R.id.rvGenreContainer) /* TODO */
-            RecyclerView rvGenreContainer; /* TODO */
     @BindView(R.id.rvVideoContainer)
     RecyclerView rvVideoContainer;
     @BindView(R.id.rvReviewContainer)
     RecyclerView rvReviewContainer;
     private MovieDetailViewModel viewModel;
+
+    public static MovieDetailFragment newInstance() {
+        return new MovieDetailFragment();
+    }
 
     public void setViewModel(MovieDetailViewModel viewModel) {
         this.viewModel = viewModel;
