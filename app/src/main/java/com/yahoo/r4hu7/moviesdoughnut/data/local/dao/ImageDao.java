@@ -14,5 +14,5 @@ public interface ImageDao {
     void insert(MovieImagesResponse movieImagesResponse);
 
     @Query("SELECT * FROM _image WHERE id =:movieId")
-    MovieImagesResponse findMovies(int movieId);
+    MovieImagesResponse getResponse(int movieId);
 }

@@ -6,11 +6,12 @@ import android.databinding.ObservableArrayList;
 import android.databinding.ObservableBoolean;
 import android.databinding.ObservableField;
 import android.databinding.ObservableList;
+import android.support.annotation.Nullable;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 
+import com.google.common.collect.Lists;
 import com.yahoo.r4hu7.moviesdoughnut.R;
 import com.yahoo.r4hu7.moviesdoughnut.data.MoviesDataSource;
 import com.yahoo.r4hu7.moviesdoughnut.data.MoviesRepository;
@@ -27,10 +28,10 @@ import com.yahoo.r4hu7.moviesdoughnut.data.remote.response.model.Movie;
 import com.yahoo.r4hu7.moviesdoughnut.data.remote.response.model.Review;
 import com.yahoo.r4hu7.moviesdoughnut.data.remote.response.model.Video;
 import com.yahoo.r4hu7.moviesdoughnut.di.module.GlideApp;
+import com.yahoo.r4hu7.moviesdoughnut.util.MovieNavigator;
 
-import java.util.ArrayList;
+import java.lang.ref.WeakReference;
 import java.util.Arrays;
-import java.util.List;
 
 public class MovieDetailViewModel extends ViewModel {
     private final ObservableBoolean dataLoading = new ObservableBoolean(false);
@@ -42,13 +43,31 @@ public class MovieDetailViewModel extends ViewModel {
     public ObservableList<Cast> casts = new ObservableArrayList<>();
     public ObservableList<ImageSource> imageSources = new ObservableArrayList<>();
     public ObservableList<Item> genres = new ObservableArrayList<>();
+    public ObservableBoolean isFav = new ObservableBoolean();
+
     private MoviesRepository moviesRepository;
     private int currentReviewPage;
     private int totalReviewPages;
+    private WeakReference<MovieNavigator> mNavigator;
+
 
     public MovieDetailViewModel(MoviesRepository moviesRepository) {
         this.moviesRepository = moviesRepository;
         this.currentReviewPage = 0;
+    }
+
+    public void setFavourite(boolean favourite) {
+        isFav.set(favourite);
+    }
+
+    public void setMovie(Movie movie) {
+        this.movie.set(movie);
+        setFavourite(movie.isFav());
+        loadFavourite();
+    }
+
+    public void setNavigator(@Nullable MovieNavigator mNavigator) {
+        this.mNavigator = new WeakReference<>(mNavigator);
     }
 
     @BindingAdapter({"posterSource"})
@@ -81,6 +100,25 @@ public class MovieDetailViewModel extends ViewModel {
                 .into(view);
     }
 
+    public void loadFavourite() {
+        moviesRepository.isMovieFav(movie.get().getId(), new MoviesDataSource.LoadItemCallback<Boolean>() {
+            @Override
+            public void onLoading() {
+
+            }
+
+            @Override
+            public void onItemLoaded(Boolean aBoolean) {
+                MovieDetailViewModel.this.isFav.set(aBoolean);
+            }
+
+            @Override
+            public void onDataNotAvailable(Throwable e) {
+
+            }
+        });
+    }
+
     public void loadMovieDetail() {
         moviesRepository.getMovie(movie.get().getId(), new MoviesDataSource.LoadItemCallback<MovieResponse>() {
             @Override
@@ -91,6 +129,7 @@ public class MovieDetailViewModel extends ViewModel {
             @Override
             public void onItemLoaded(MovieResponse movieResponse) {
                 movieDetail.set(movieResponse);
+                moviesRepository.saveMovie(movieResponse);
             }
 
             @Override
@@ -110,6 +149,7 @@ public class MovieDetailViewModel extends ViewModel {
             @Override
             public void onItemLoaded(MovieExternalIdsResponse movieExternalIdsResponse) {
                 externalIds.set(movieExternalIdsResponse);
+                moviesRepository.saveLinks(movieExternalIdsResponse);
             }
 
             @Override
@@ -129,6 +169,7 @@ public class MovieDetailViewModel extends ViewModel {
             @Override
             public void onItemLoaded(MovieVideosResponse movieVideosResponse) {
                 videos.addAll(Arrays.asList(movieVideosResponse.getResults()));
+                moviesRepository.saveVideo(movieVideosResponse);
             }
 
             @Override
@@ -148,6 +189,7 @@ public class MovieDetailViewModel extends ViewModel {
             @Override
             public void onItemLoaded(MovieCreditsResponse movieCreditsResponse) {
                 casts.addAll(Arrays.asList(movieCreditsResponse.getCast()));
+                moviesRepository.saveCast(movieCreditsResponse);
             }
 
             @Override
@@ -166,8 +208,10 @@ public class MovieDetailViewModel extends ViewModel {
 
             @Override
             public void onItemLoaded(MovieImagesResponse movieImagesResponse) {
+                imageSources.clear();
                 imageSources.addAll(Arrays.asList(movieImagesResponse.getPosters()));
                 imageSources.addAll(Arrays.asList(movieImagesResponse.getBackdrops()));
+                moviesRepository.saveImages(movieImagesResponse);
             }
 
             @Override
@@ -190,7 +234,6 @@ public class MovieDetailViewModel extends ViewModel {
                 MovieDetailViewModel.this.totalReviewPages = totalPages;
                 currentReviewPage++;
                 dataLoading.set(false);
-
             }
 
             @Override
@@ -201,16 +244,38 @@ public class MovieDetailViewModel extends ViewModel {
     }
 
     public String getGenreString() {
-        List<String> l = new ArrayList<>();
-        for (Item i : movieDetail.get().genres) {
-            l.add(i.getName());
-        }
-        return TextUtils.join("  \u25CF  ", l);
+        return TextUtils.join("  \u25CF  ",
+                Lists.transform(
+                        Arrays.asList(movieDetail.get().genres),
+                        Item::getName));
     }
 
     public void linkClicked(View v, String url) {
-        Log.e(String.valueOf(v.getId()), url);
+        switch (v.getId()) {
+            case R.id.llWebsite:
+                mNavigator.get().openLink(url);
+                break;
+            case R.id.llImdb:
+                mNavigator.get().openLink(String.format("https://www.imdb.com/title/%s/", url));
+                break;
+            case R.id.llFacebook:
+                mNavigator.get().openLink(String.format("https://www.facebook.com/%s", url));
+                break;
+            case R.id.llTwitter:
+                mNavigator.get().openLink(String.format("https://twitter.com/%s", url));
+                break;
+            case R.id.llInstagram:
+                mNavigator.get().openLink(String.format("https://www.instagram.com/%s/", url));
+                break;
+        }
+    }
 
+    public void favouriteClick() {
+        if (isFav.get()) {
+            moviesRepository.markFavourite(movie.get().getId());
+        } else {
+            moviesRepository.unMarkFavourite(movie.get().getId());
+        }
     }
 
     public boolean isLastReviewPage() {
@@ -220,6 +285,5 @@ public class MovieDetailViewModel extends ViewModel {
     public boolean isDataLoading() {
         return dataLoading.get();
     }
-
 
 }

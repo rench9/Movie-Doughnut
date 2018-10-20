@@ -72,12 +72,15 @@ public class MovieResponseObserver<T> implements MaybeObserver<T> {
     private MovieImagesResponse getImageSources(MovieImagesResponse movieImagesResponse) {
 
         List<ImageSource> l = new ArrayList<>();
-        Backdrop i = movieImagesResponse.getBackdrops()[0];
-        movieImagesResponse.getBackdrops()[0] = movieImagesResponse.getBackdrops()[movieImagesResponse.getBackdrops().length - 1];
-        movieImagesResponse.getBackdrops()[movieImagesResponse.getBackdrops().length - 1] = i;
-        l.addAll(Arrays.asList(movieImagesResponse.getBackdrops()));
-        l.addAll(Arrays.asList(movieImagesResponse.getPosters()));
-//        return l.toArray(new ImageSource[0]);
+        try {
+            Backdrop i = movieImagesResponse.getBackdrops()[0];
+            movieImagesResponse.getBackdrops()[0] = movieImagesResponse.getBackdrops()[movieImagesResponse.getBackdrops().length - 1];
+            movieImagesResponse.getBackdrops()[movieImagesResponse.getBackdrops().length - 1] = i;
+            l.addAll(Arrays.asList(movieImagesResponse.getBackdrops()));
+            l.addAll(Arrays.asList(movieImagesResponse.getPosters()));
+        } catch (Exception ignore) {
+
+        }
         return movieImagesResponse;
     }
 }

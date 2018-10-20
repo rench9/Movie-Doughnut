@@ -36,4 +36,6 @@
 
     <color name="transparent_black">#88000000</color>
     <color name="transparent_white">#88ffffff</color>
+    <color name="placeholder_img">#bcbdbf</color>
+    <color name="splash_color">#368bf2</color>
 </resources>

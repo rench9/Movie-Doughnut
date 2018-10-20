@@ -31,11 +31,10 @@
                 android:backgroundTint="@color/transparent_black">
 
                 <TextView
-                    style="@style/typography_title_light"
+                    style="@style/typography_subheading_light"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:text="R"
                     android:textStyle="bold" />
             </FrameLayout>
 

@@ -1,11 +1,25 @@
 package com.yahoo.r4hu7.moviesdoughnut.data.remote.response;
 
+import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.ForeignKey;
+import android.arch.persistence.room.PrimaryKey;
+
+import com.yahoo.r4hu7.moviesdoughnut.data.remote.response.model.Movie;
+
+@Entity(tableName = "_link",
+        foreignKeys = {@ForeignKey(
+                entity = Movie.class,
+                parentColumns = "id",
+                childColumns = "id",
+                onDelete = ForeignKey.CASCADE
+        )})
 public class MovieExternalIdsResponse extends Response {
-    int id;
-    String imdb_id;
-    String facebook_id;
-    String instagram_id;
-    String twitter_id;
+    @PrimaryKey
+    public int id;
+    public String imdb_id;
+    public String facebook_id;
+    public String instagram_id;
+    public String twitter_id;
 
     public int getId() {
         return id;

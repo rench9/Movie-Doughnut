@@ -49,7 +49,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Now in theaters"
+                    android:text="@string/now_in_theaters"
                     android:textStyle="bold" />
 
                 <TextView
@@ -57,7 +57,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/unit4"
-                    android:text="more" />
+                    android:text="@string/more" />
             </LinearLayout>
 
             <android.support.v7.widget.RecyclerView
@@ -83,7 +83,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Upcoming Movies"
+                    android:text="@string/upcoming_movies"
                     android:textStyle="bold" />
 
                 <TextView
@@ -91,7 +91,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/unit4"
-                    android:text="more" />
+                    android:text="@string/more" />
             </LinearLayout>
 
             <android.support.v7.widget.RecyclerView
@@ -118,7 +118,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Popular Movies"
+                    android:text="@string/popular_movies"
                     android:textStyle="bold" />
 
                 <TextView
@@ -126,7 +126,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/unit4"
-                    android:text="more" />
+                    android:text="@string/more" />
             </LinearLayout>
 
             <android.support.v7.widget.RecyclerView
@@ -152,7 +152,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Top Rated Movies"
+                    android:text="@string/top_rated_movies"
                     android:textStyle="bold" />
 
                 <TextView
@@ -160,7 +160,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/unit4"
-                    android:text="more" />
+                    android:text="@string/more" />
             </LinearLayout>
 
             <android.support.v7.widget.RecyclerView

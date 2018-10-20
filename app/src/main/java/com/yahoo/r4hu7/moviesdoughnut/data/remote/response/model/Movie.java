@@ -22,21 +22,23 @@ public class Movie implements Parcelable {
             return new Movie[size];
         }
     };
-    String poster_path;
-    boolean adult;
-    String overview;
-    String release_date;
-    int[] genre_ids;
+    public String poster_path;
+    public boolean adult;
+    public String overview;
+    public String release_date;
+    //    @Ignore
+    public int[] genre_ids;
     @PrimaryKey
-    int id;
-    String original_title;
-    String original_language;
-    String title;
-    String backdrop_path;
-    double popularity;
-    int vote_count;
-    boolean video;
-    double vote_average;
+    public int id;
+    public String original_title;
+    public String original_language;
+    public String title;
+    public String backdrop_path;
+    public double popularity;
+    public int vote_count;
+    public boolean video;
+    public double vote_average;
+    public boolean isFav;
 
     public Movie() {
     }
@@ -55,6 +57,7 @@ public class Movie implements Parcelable {
         popularity = in.readDouble();
         vote_count = in.readInt();
         video = in.readByte() != 0;
+        isFav = in.readByte() != 0;
         vote_average = in.readDouble();
     }
 
@@ -73,6 +76,7 @@ public class Movie implements Parcelable {
         dest.writeDouble(popularity);
         dest.writeInt(vote_count);
         dest.writeByte((byte) (video ? 1 : 0));
+        dest.writeByte((byte) (isFav ? 1 : 0));
         dest.writeDouble(vote_average);
     }
 
@@ -135,5 +139,13 @@ public class Movie implements Parcelable {
 
     public double getVote_average() {
         return vote_average;
+    }
+
+    public boolean isFav() {
+        return isFav;
+    }
+
+    public void setFav(boolean isFav) {
+        this.isFav = isFav;
     }
 }

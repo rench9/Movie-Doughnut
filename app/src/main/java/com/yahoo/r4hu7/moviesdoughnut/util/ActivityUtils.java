@@ -29,6 +29,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * This provides methods to help Activities load their UI.
  */
 public class ActivityUtils {
+    public static boolean splashGone;
 
     /**
      * The {@code fragment} is added to the container view with id {@code frameId}. The operation is
@@ -53,7 +54,7 @@ public class ActivityUtils {
         checkNotNull(fragment);
         FragmentTransaction transaction = fragmentManager.beginTransaction();
         transaction.add(fragment, tag);
-        transaction.commit();
+        transaction.commitNowAllowingStateLoss();
     }
 
     public static boolean isLandscape(Resources resources) {

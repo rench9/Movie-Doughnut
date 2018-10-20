@@ -35,7 +35,8 @@
                     posterImageSource="@{vm.movie.poster_path}"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/no_height"
-                    android:adjustViewBounds="true" />
+                    android:adjustViewBounds="true"
+                    android:background="@color/placeholder_img" />
             </android.support.v7.widget.CardView>
 
             <TextView

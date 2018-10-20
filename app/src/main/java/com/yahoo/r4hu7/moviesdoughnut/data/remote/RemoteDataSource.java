@@ -55,7 +55,8 @@ public class RemoteDataSource implements MoviesDataSource {
 
     @Override
     public void getMovie(int movieId, LoadItemCallback<MovieResponse> callback) {
-        movies.getMovieById(movieId).subscribe(new MovieResponseObserver<>(callback));
+        MovieResponseObserver observer = new MovieResponseObserver<>(callback);
+        movies.getMovieById(movieId).subscribe(observer);
     }
 
     @Override
@@ -66,6 +67,7 @@ public class RemoteDataSource implements MoviesDataSource {
     @Override
     public void getCast(int movieId, LoadItemCallback<MovieCreditsResponse> callback) {
         movies.getMovieCredits(movieId).subscribe(new MovieResponseObserver<>(callback));
+
     }
 
     @Override
@@ -84,8 +86,18 @@ public class RemoteDataSource implements MoviesDataSource {
     }
 
     @Override
+    public void isMovieFav(int movieId, LoadItemCallback<Boolean> callback) {
+        localDataSource.isMovieFav(movieId, callback);
+    }
+
+    @Override
     public void markFavourite(int movieId) {
         localDataSource.markFavourite(movieId);
+    }
+
+    @Override
+    public void unMarkFavourite(int movieId) {
+        localDataSource.unMarkFavourite(movieId);
     }
 
     @Override
@@ -114,7 +126,12 @@ public class RemoteDataSource implements MoviesDataSource {
     }
 
     @Override
-    public void saveSortOrder(SortOrder[] sortOrders) {
-        localDataSource.saveSortOrder(sortOrders);
+    public void saveSortOrder(int sortId, Movie[] movies) {
+        localDataSource.saveSortOrder(sortId, movies);
+    }
+
+    @Override
+    public void saveLinks(MovieExternalIdsResponse movieExternalIdsResponse) {
+        localDataSource.saveLinks(movieExternalIdsResponse);
     }
 }

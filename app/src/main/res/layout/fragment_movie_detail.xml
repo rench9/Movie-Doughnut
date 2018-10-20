@@ -27,9 +27,9 @@
             <android.support.v7.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/unit6"
-                android:layout_marginEnd="@dimen/unit4"
                 android:layout_marginStart="@dimen/unit4"
+                android:layout_marginEnd="@dimen/unit4"
+                android:layout_marginBottom="@dimen/unit6"
                 app:cardCornerRadius="@dimen/radius4"
                 app:cardElevation="@dimen/elevation9">
 
@@ -38,15 +38,16 @@
                     backdropSource="@{vm.movie.backdrop_path}"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/no_height"
-                    android:adjustViewBounds="true" />
+                    android:adjustViewBounds="true"
+                    android:background="@color/placeholder_img" />
 
             </android.support.v7.widget.CardView>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginEnd="@dimen/unit5"
                 android:layout_marginStart="@dimen/unit5"
+                android:layout_marginEnd="@dimen/unit5"
                 android:clipChildren="false"
                 android:clipToPadding="false"
                 android:orientation="vertical">
@@ -62,19 +63,43 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentStart="true"
-                        android:layout_toStartOf="@id/tvDuration"
+                        android:layout_toStartOf="@id/cbFav"
                         android:text="@{vm.movie.title}" />
 
-                    <TextView
-                        android:id="@id/tvDuration"
-                        style="@style/typography_subheading"
+                    <CheckBox
+                        android:id="@id/cbFav"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentEnd="true"
                         android:layout_marginStart="@dimen/unit2"
-                        android:text="@{vm.movieDetail.runtime+` min`}"
-                        android:textColor="@color/rating_high"
-                        android:textStyle="bold" />
+                        android:background="@null"
+                        android:button="@drawable/btn_fav"
+                        android:checked="@={vm.isFav}"
+                        android:onClick="@{()->vm.favouriteClick()}"
+                        android:stateListAnimator="@animator/btn_fav"
+                        android:text="@null" />
+                    <!--                    <ImageButton
+                                            android:id="@id/btnFav"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:layout_alignParentEnd="true"
+                                            android:layout_marginStart="@dimen/unit2"
+
+                                            android:background="@null"
+                                            android:src="@drawable/like"
+                                            android:tint="@color/shade8" />-->
+
+                    <!--                    <TextView
+                                            android:id="@id/tvDuration"
+                                            style="@style/typography_subheading"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:layout_alignParentEnd="true"
+                                            android:layout_marginStart="@dimen/unit2"
+                                            android:text="@{vm.movieDetail.runtime+` min`}"
+                                            android:textColor="@color/rating_high"
+                                            android:textStyle="bold"
+                                            android:visibility="gone" />-->
 
                     <TextView
                         android:id="@id/tvReleaseDate"
@@ -98,7 +123,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="@dimen/unit6"
-                    android:text="Description"
+                    android:text="@string/description"
                     android:textStyle="bold" />
 
                 <TextView
@@ -116,7 +141,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="@dimen/unit6"
-                    android:text="Cast"
+                    android:text="@string/cast"
                     android:textStyle="bold"
                     android:visibility="@{vm.casts.isEmpty()?View.GONE:View.VISIBLE}" />
 
@@ -146,7 +171,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentStart="true"
-                        android:text="Photos"
+                        android:text="@string/photos"
                         android:textStyle="bold" />
 
                     <TextView
@@ -181,25 +206,8 @@
                             <ImageView
                                 backdropSource="@{vm.imageSources.size() > 0?vm.imageSources.get(0).file_path:null}"
                                 android:layout_width="match_parent"
-                                android:layout_height="match_parent" />
-                        </android.support.v7.widget.CardView>
-
-
-                        <Space
-                            android:layout_width="@dimen/unit2"
-                            android:layout_height="wrap_content" />
-
-                        <android.support.v7.widget.CardView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="3"
-                            app:cardCornerRadius="@dimen/radius2"
-                            app:cardElevation="@dimen/elevation0">
-
-                            <com.yahoo.r4hu7.moviesdoughnut.ui.dependency.SquareImageView
-                                imageSource="@{vm.imageSources.size() > 0?vm.imageSources.get(1).file_path:null}"
-                                android:layout_width="match_parent"
-                                android:layout_height="@dimen/no_height" />
+                                android:layout_height="match_parent"
+                                android:background="@color/placeholder_img" />
                         </android.support.v7.widget.CardView>
 
                         <Space
@@ -214,9 +222,28 @@
                             app:cardElevation="@dimen/elevation0">
 
                             <com.yahoo.r4hu7.moviesdoughnut.ui.dependency.SquareImageView
-                                imageSource="@{vm.imageSources.size() > 0?vm.imageSources.get(2).file_path:null}"
+                                imageSource="@{vm.imageSources.size() > 1?vm.imageSources.get(1).file_path:null}"
                                 android:layout_width="match_parent"
-                                android:layout_height="@dimen/no_height" />
+                                android:layout_height="@dimen/no_height"
+                                android:background="@color/placeholder_img" />
+                        </android.support.v7.widget.CardView>
+
+                        <Space
+                            android:layout_width="@dimen/unit2"
+                            android:layout_height="wrap_content" />
+
+                        <android.support.v7.widget.CardView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="3"
+                            app:cardCornerRadius="@dimen/radius2"
+                            app:cardElevation="@dimen/elevation0">
+
+                            <com.yahoo.r4hu7.moviesdoughnut.ui.dependency.SquareImageView
+                                imageSource="@{vm.imageSources.size() > 2?vm.imageSources.get(2).file_path:null}"
+                                android:layout_width="match_parent"
+                                android:layout_height="@dimen/no_height"
+                                android:background="@color/placeholder_img" />
                         </android.support.v7.widget.CardView>
                     </LinearLayout>
 
@@ -237,9 +264,10 @@
                             app:cardElevation="@dimen/elevation0">
 
                             <com.yahoo.r4hu7.moviesdoughnut.ui.dependency.SquareImageView
-                                imageSource="@{vm.imageSources.size() > 0?vm.imageSources.get(3).file_path:null}"
+                                imageSource="@{vm.imageSources.size() > 3?vm.imageSources.get(3).file_path:null}"
                                 android:layout_width="match_parent"
-                                android:layout_height="@dimen/no_height" />
+                                android:layout_height="@dimen/no_height"
+                                android:background="@color/placeholder_img" />
                         </android.support.v7.widget.CardView>
 
 
@@ -256,9 +284,10 @@
                             app:cardElevation="@dimen/elevation0">
 
                             <com.yahoo.r4hu7.moviesdoughnut.ui.dependency.SquareImageView
-                                imageSource="@{vm.imageSources.size() > 0?vm.imageSources.get(4).file_path:null}"
+                                imageSource="@{vm.imageSources.size() > 4?vm.imageSources.get(4).file_path:null}"
                                 android:layout_width="match_parent"
-                                android:layout_height="@dimen/no_height" />
+                                android:layout_height="@dimen/no_height"
+                                android:background="@color/placeholder_img" />
                         </android.support.v7.widget.CardView>
 
                         <Space
@@ -274,9 +303,10 @@
                             app:cardElevation="@dimen/elevation0">
 
                             <com.yahoo.r4hu7.moviesdoughnut.ui.dependency.SquareImageView
-                                imageSource="@{vm.imageSources.size() > 0?vm.imageSources.get(5).file_path:null}"
+                                imageSource="@{vm.imageSources.size() > 5?vm.imageSources.get(5).file_path:null}"
                                 android:layout_width="match_parent"
-                                android:layout_height="@dimen/no_height" />
+                                android:layout_height="@dimen/no_height"
+                                android:background="@color/placeholder_img" />
                         </android.support.v7.widget.CardView>
 
                         <Space
@@ -295,9 +325,10 @@
                                 android:layout_height="wrap_content">
 
                                 <com.yahoo.r4hu7.moviesdoughnut.ui.dependency.SquareImageView
-                                    imageSource="@{vm.imageSources.size() > 0?vm.imageSources.get(6).file_path:null}"
+                                    imageSource="@{vm.imageSources.size() >6?vm.imageSources.get(6).file_path:null}"
                                     android:layout_width="match_parent"
-                                    android:layout_height="@dimen/no_height" />
+                                    android:layout_height="@dimen/no_height"
+                                    android:background="@color/placeholder_img" />
 
                                 <ImageView
                                     android:layout_width="match_parent"
@@ -311,14 +342,31 @@
                     </LinearLayout>
                 </LinearLayout>
 
-                <TextView
-                    style="@style/typography_subheading"
-                    android:layout_width="wrap_content"
+
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="@dimen/unit6"
-                    android:text="Videos"
-                    android:textStyle="bold"
-                    android:visibility="@{vm.videos.isEmpty()?View.GONE:View.VISIBLE}" />
+                    android:orientation="horizontal"
+                    android:visibility="@{vm.videos.isEmpty()?View.GONE:View.VISIBLE}">
+
+                    <TextView
+                        style="@style/typography_subheading"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/videos"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@id/tvShare"
+                        style="@style/typography_body2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="@dimen/unit2"
+                        android:text="@string/share"
+                        android:textStyle="bold" />
+                </LinearLayout>
 
                 <android.support.v7.widget.RecyclerView
                     android:id="@id/rvVideoContainer"
@@ -338,7 +386,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="@dimen/unit6"
-                    android:text="Reviews"
+                    android:text="@string/reviews"
                     android:textStyle="bold"
                     android:visibility="@{vm.reviews.isEmpty()?View.GONE:View.VISIBLE}" />
 
@@ -360,7 +408,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="@dimen/unit6"
-                    android:text="Stay Connected"
+                    android:text="@string/stay_connected"
                     android:textStyle="bold"
                     android:visibility="@{vm.externalIds.isDataAvailable()||vm.movieDetail.homepage!=null?View.VISIBLE:View.GONE}" />
 
@@ -392,7 +440,7 @@
                             style="@style/typography_caption_bold"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Website" />
+                            android:text="@string/website" />
                     </LinearLayout>
 
                     <LinearLayout
@@ -416,7 +464,7 @@
                             style="@style/typography_caption_bold"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="IMDB" />
+                            android:text="@string/imdb" />
                     </LinearLayout>
 
                     <LinearLayout

@@ -23,7 +23,11 @@ public interface MoviesDataSource {
 
     void getLinks(int movieId, LoadItemCallback<MovieExternalIdsResponse> callback);
 
+    void isMovieFav(int movieId, LoadItemCallback<Boolean> callback);
+
     void markFavourite(int movieId);
+
+    void unMarkFavourite(int movieId);
 
     void saveMovies(Movie[] movies);
 
@@ -35,7 +39,9 @@ public interface MoviesDataSource {
 
     void saveVideo(MovieVideosResponse movieVideosResponse);
 
-    void saveSortOrder(SortOrder[] sortOrders);
+    void saveSortOrder(int sortOrder, Movie[] movies);
+
+    void saveLinks(MovieExternalIdsResponse movieExternalIdsResponse);
 
     interface LoadItemCallback<T> {
         void onLoading();
@@ -46,7 +52,6 @@ public interface MoviesDataSource {
     }
 
     interface LoadPagingItemCallback<T, T2, T3> {
-
         void onLoading();
 
         void onItemLoaded(T t, T2 page, T3 totalPages);

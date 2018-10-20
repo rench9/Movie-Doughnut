@@ -81,5 +81,7 @@
     <dimen name="cast_image_w">50dp</dimen>
     <dimen name="cast_image_r">25dp</dimen>
 
+    <dimen name="splash_logo_w">180dp</dimen>
+
 
 </resources>

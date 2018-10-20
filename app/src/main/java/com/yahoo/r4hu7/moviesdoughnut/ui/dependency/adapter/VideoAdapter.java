@@ -11,13 +11,16 @@ import com.yahoo.r4hu7.moviesdoughnut.R;
 import com.yahoo.r4hu7.moviesdoughnut.data.remote.response.model.Video;
 import com.yahoo.r4hu7.moviesdoughnut.databinding.AdapterVideoBinding;
 import com.yahoo.r4hu7.moviesdoughnut.ui.viewmodel.VideoViewModel;
+import com.yahoo.r4hu7.moviesdoughnut.util.MovieNavigator;
 
 public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.ViewHolder> {
 
     private ObservableList<Video> videos;
+    private MovieNavigator movieNavigator;
 
-    public VideoAdapter(ObservableList<Video> videos) {
+    public VideoAdapter(ObservableList<Video> videos, MovieNavigator navigator) {
         this.videos = videos;
+        this.movieNavigator = navigator;
         videos.addOnListChangedCallback(new ObservableList.OnListChangedCallback<ObservableList<Video>>() {
             @Override
             public void onChanged(ObservableList<Video> sender) {
@@ -58,6 +61,7 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.ViewHolder> 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         holder.viewModel.setVideo(videos.get(position));
+        holder.viewModel.setNavigator(movieNavigator);
     }
 
     @Override

@@ -2,6 +2,7 @@ package com.yahoo.r4hu7.moviesdoughnut.ui.fragment;
 
 import android.graphics.Rect;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
@@ -30,11 +31,10 @@ public class GridMoviesFragment extends Fragment {
     }
 
     public GridMoviesFragment() {
-        // Required empty public constructor
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_grid_movies, container, false);
         ButterKnife.bind(this, v);

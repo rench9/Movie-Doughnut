@@ -1,25 +1,33 @@
 package com.yahoo.r4hu7.moviesdoughnut.data.remote.response;
 
 import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.ForeignKey;
 import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.PrimaryKey;
 import android.arch.persistence.room.TypeConverters;
 
 import com.yahoo.r4hu7.moviesdoughnut.data.local.entity.MovieTypeConverter;
 import com.yahoo.r4hu7.moviesdoughnut.data.remote.response.model.Item;
+import com.yahoo.r4hu7.moviesdoughnut.data.remote.response.model.Movie;
 import com.yahoo.r4hu7.moviesdoughnut.data.remote.response.model.ProductionCompanies;
 import com.yahoo.r4hu7.moviesdoughnut.data.remote.response.model.ProductionCountries;
 import com.yahoo.r4hu7.moviesdoughnut.data.remote.response.model.SpokenLanguages;
 
-@Entity(tableName = "_detail")
+@Entity(tableName = "_detail",
+        foreignKeys = {@ForeignKey(
+                entity = Movie.class,
+                parentColumns = "id",
+                childColumns = "id",
+                onDelete = ForeignKey.CASCADE
+        )})
 @TypeConverters(MovieTypeConverter.class)
 public class MovieResponse extends Response {
     @Ignore
-    public boolean adult;
+    private boolean adult;
     @Ignore
-    public String backdrop_path;
+    private String backdrop_path;
     @Ignore
-    public Object belongs_to_collection;
+    private Object belongs_to_collection;
     public int budget;
     public Item[] genres;
     public String homepage;
@@ -27,25 +35,25 @@ public class MovieResponse extends Response {
     public int id;
     public String imdb_id; // minLength: 9, maxLength: 9, pattern: ^tt[0-9]{7}
     @Ignore
-    public String original_language;
+    private String original_language;
     @Ignore
-    public String original_title;
+    private String original_title;
     @Ignore
-    public String overview;
+    private String overview;
     @Ignore
-    public double popularity;
+    private double popularity;
     @Ignore
     public String poster_path;
     @Ignore
-    public ProductionCompanies[] production_companies;
+    private ProductionCompanies[] production_companies;
     @Ignore
-    public ProductionCountries[] production_countries;
+    private ProductionCountries[] production_countries;
     @Ignore
     public String release_date;
     public int revenue;
     public int runtime;
     @Ignore
-    public SpokenLanguages[] spoken_languages;
+    private SpokenLanguages[] spoken_languages;
     public String status; //Rumored, Planned, In Production, Post Production, Released, Canceled
     public String tagline;
     @Ignore
@@ -55,7 +63,7 @@ public class MovieResponse extends Response {
     @Ignore
     public double vote_average;
     @Ignore
-    public int vote_count;
+    private int vote_count;
 
     public boolean isAdult() {
         return adult;

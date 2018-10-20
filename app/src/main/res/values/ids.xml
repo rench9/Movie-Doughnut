@@ -21,22 +21,26 @@
     <item name="cvContainer" type="id" />
     <item name="tvItem" type="id" />
     <item name="rvContainerMovies" type="id" />
-    <item name="tvReleaseDate" type="id">tvReleaseDate</item>
-    <item name="rvGenreContainer" type="id">rvGenreContainer</item>
-    <item name="tvDescription" type="id">tvDescription</item>
-    <item name="rvCastContainer" type="id">rvCastContainer</item>
-    <item name="tvPhoto" type="id">tvPhoto</item>
-
-    <item name="llWebsite" type="id">llWebsite</item>
-    <item name="llImdb" type="id">llImdb</item>
-    <item name="llFacebook" type="id">llFacebook</item>
-    <item name="llTwitter" type="id">llTwitter</item>
-    <item name="llInstagram" type="id">llInstagram</item>
-    <item name="cvCast" type="id">cvCast</item>
-    <item name="ivCast" type="id">ivCast</item>
-    <item name="rvVideoContainer" type="id">rvVideoContainer</item>
-    <item name="rvReviewContainer" type="id">rvReviewContainer</item>
-    <item name="ivVideo" type="id">ivVideo</item>
-    <item name="flAvatar" type="id">flAvatar</item>
-    <item name="tvTitle" type="id">tvTitle</item>
+    <item name="tvReleaseDate" type="id" />
+    <item name="rvGenreContainer" type="id" />
+    <item name="tvDescription" type="id" />
+    <item name="rvCastContainer" type="id" />
+    <item name="tvPhoto" type="id" />
+    <item name="llWebsite" type="id" />
+    <item name="llImdb" type="id" />
+    <item name="llFacebook" type="id" />
+    <item name="llTwitter" type="id" />
+    <item name="llInstagram" type="id" />
+    <item name="cvCast" type="id" />
+    <item name="ivCast" type="id" />
+    <item name="rvVideoContainer" type="id" />
+    <item name="rvReviewContainer" type="id" />
+    <item name="ivVideo" type="id" />
+    <item name="flAvatar" type="id" />
+    <item name="tvTitle" type="id" />
+    <item name="btnFav" type="id" />
+    <item name="cbFav" type="id" />
+    <item name="cvVideo" type="id" />
+    <item name="ivLoading" type="id" />
+    <item name="tvShare" type="id" />
 </resources>

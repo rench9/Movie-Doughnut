@@ -17,6 +17,7 @@ import com.yahoo.r4hu7.moviesdoughnut.util.MovieNavigator;
 public class PosterCardAdapter extends RecyclerView.Adapter<PosterCardAdapter.ViewHolder> {
 
     private ObservableList<Movie> movies;
+    private ObservableList.OnListChangedCallback observable;
 
     private MovieNavigator movieNavigator;
 
@@ -26,43 +27,57 @@ public class PosterCardAdapter extends RecyclerView.Adapter<PosterCardAdapter.Vi
         this.movies = movies;
         this.movieNavigator = navigator;
         this.isGrid = isGrid;
-        movies.addOnListChangedCallback(new ObservableList.OnListChangedCallback<ObservableList<Movie>>() {
+        this.observable = new ObservableList.
+                OnListChangedCallback<ObservableList<Movie>>() {
             @Override
             public void onChanged(ObservableList<Movie> sender) {
                 notifyDataSetChanged();
             }
 
             @Override
-            public void onItemRangeChanged(ObservableList<Movie> sender, int positionStart, int itemCount) {
+            public void onItemRangeChanged(ObservableList<Movie> sender, int positionStart,
+                                           int itemCount) {
                 notifyItemRangeChanged(positionStart, itemCount);
             }
 
             @Override
-            public void onItemRangeInserted(ObservableList<Movie> sender, int positionStart, int itemCount) {
+            public void onItemRangeInserted(ObservableList<Movie> sender, int positionStart,
+                                            int itemCount) {
                 notifyItemRangeInserted(positionStart, itemCount);
             }
 
             @Override
-            public void onItemRangeMoved(ObservableList<Movie> sender, int fromPosition, int toPosition, int itemCount) {
+            public void onItemRangeMoved(ObservableList<Movie> sender, int fromPosition,
+                                         int toPosition, int itemCount) {
                 notifyItemRangeChanged(fromPosition, itemCount);
-
             }
 
             @Override
-            public void onItemRangeRemoved(ObservableList<Movie> sender, int positionStart, int itemCount) {
+            public void onItemRangeRemoved(ObservableList<Movie> sender, int positionStart,
+                                           int itemCount) {
                 notifyItemRangeRemoved(positionStart, itemCount);
             }
-        });
+        };
+        this.movies.addOnListChangedCallback(observable);
     }
+
 
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         if (isGrid) {
-            AdapterPosterGridBinding binding = DataBindingUtil.inflate(LayoutInflater.from(parent.getContext()), R.layout.adapter_poster_grid, parent, false);
+            AdapterPosterGridBinding binding = DataBindingUtil.inflate(
+                    LayoutInflater.from(parent.getContext()),
+                    R.layout.adapter_poster_grid,
+                    parent,
+                    false);
             return new ViewHolder(binding);
         } else {
-            AdapterPosterBinding binding = DataBindingUtil.inflate(LayoutInflater.from(parent.getContext()), R.layout.adapter_poster, parent, false);
+            AdapterPosterBinding binding = DataBindingUtil.inflate(
+                    LayoutInflater.from(parent.getContext()),
+                    R.layout.adapter_poster,
+                    parent,
+                    false);
             return new ViewHolder(binding);
         }
     }

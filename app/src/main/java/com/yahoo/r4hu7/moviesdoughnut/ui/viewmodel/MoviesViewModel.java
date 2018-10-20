@@ -15,6 +15,7 @@ import java.util.Arrays;
 public class MoviesViewModel extends ViewModel {
     public final ObservableList<Movie> movies = new ObservableArrayList<>();
     private final ObservableBoolean dataLoading = new ObservableBoolean(false);
+    public ObservableBoolean dataLoaded = new ObservableBoolean();
     private MoviesRepository repository;
     private int currentPage;
     private int sortOrder;
@@ -26,18 +27,16 @@ public class MoviesViewModel extends ViewModel {
         sortOrder = SortOrder.POPULAR;
     }
 
-    public MoviesViewModel(MoviesRepository repository, int sortOrder) {
-        this.repository = repository;
-        currentPage = 0;
-        this.sortOrder = sortOrder;
-    }
-
     public void setSortOrder(int sortOrder) {
         this.sortOrder = sortOrder;
+        if (!repository.isOffline())
+            currentPage = 0;
         movies.clear();
     }
 
     public void loadMovies() {
+        if (sortOrder == 0)
+            throw new IllegalArgumentException("First set Movies Sort order, using MoviesViewModel.setSortOrder(<SortOrder>)");
         repository.getMovies(sortOrder, currentPage + 1, new MoviesDataSource.LoadPagingItemCallback<Movie[], Integer, Integer>() {
             @Override
             public void onLoading() {
@@ -50,6 +49,9 @@ public class MoviesViewModel extends ViewModel {
                 MoviesViewModel.this.totalPages = totalPages;
                 currentPage++;
                 dataLoading.set(false);
+                repository.saveMovies(movies);
+                repository.saveSortOrder(sortOrder, movies);
+                dataLoaded.set(true);
             }
 
             @Override
