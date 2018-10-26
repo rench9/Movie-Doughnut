@@ -1,5 +1,8 @@
 package com.yahoo.r4hu7.moviesdoughnut.ui.fragment;
 
+import android.arch.lifecycle.ViewModel;
+import android.arch.lifecycle.ViewModelProvider;
+import android.arch.lifecycle.ViewModelProviders;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -11,6 +14,9 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.yahoo.r4hu7.moviesdoughnut.R;
+import com.yahoo.r4hu7.moviesdoughnut.data.MoviesRepository;
+import com.yahoo.r4hu7.moviesdoughnut.di.DaggerRepositoryComponent;
+import com.yahoo.r4hu7.moviesdoughnut.di.module.ContextModule;
 import com.yahoo.r4hu7.moviesdoughnut.ui.dependency.RecyclerViewMoviesPagination;
 import com.yahoo.r4hu7.moviesdoughnut.ui.dependency.adapter.PosterCardAdapter;
 import com.yahoo.r4hu7.moviesdoughnut.ui.viewmodel.MoviesViewModel;
@@ -25,6 +31,10 @@ public class GridMoviesFragment extends Fragment {
     @BindView(R.id.rvContainerMovies)
     RecyclerView rvContainerMovies;
     private MoviesViewModel moviesViewModel;
+    public static final String MOVIES_VM = "MOVIES_VM";
+    PosterCardAdapter adapter;
+    private MoviesRepository repository;
+    private ViewModelProvider.NewInstanceFactory newInstanceFactory;
 
     public static GridMoviesFragment newInstance() {
         return new GridMoviesFragment();
@@ -44,11 +54,36 @@ public class GridMoviesFragment extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        initViewModels();
         initRecyclerViews();
     }
 
+    private void initViewModels() {
+        if (repository == null)
+            repository = DaggerRepositoryComponent.builder().contextModule(new ContextModule(getContext())).build().getMoviesRepository();
+
+        if (newInstanceFactory == null)
+            newInstanceFactory = new ViewModelProvider.NewInstanceFactory() {
+                @NonNull
+                @Override
+                public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
+                    return (T) new MoviesViewModel(repository);
+                }
+            };
+        if (moviesViewModel == null) {
+            moviesViewModel = ViewModelProviders.of(this, newInstanceFactory).get(MOVIES_VM, MoviesViewModel.class);
+        }
+
+        this.moviesViewModel.movies.observe(this, listResource -> {
+            if (listResource != null && listResource.getData() != null) {
+                adapter.setMovies(listResource.getData());
+                moviesViewModel.setNextPage(moviesViewModel.getNextPage());
+            }
+        });
+    }
+
     private void initRecyclerViews() {
-        PosterCardAdapter adapter = new PosterCardAdapter(moviesViewModel.movies, (MovieNavigator) getActivity(), true);
+        adapter = new PosterCardAdapter((MovieNavigator) getActivity(), true);
         rvContainerMovies.setAdapter(adapter);
 
         rvContainerMovies.addItemDecoration(getItemDecoration());
@@ -56,23 +91,20 @@ public class GridMoviesFragment extends Fragment {
         rvContainerMovies.addOnScrollListener(new RecyclerViewMoviesPagination() {
             @Override
             protected void loadMoreItems() {
-                moviesViewModel.loadMovies();
+                moviesViewModel.loadMoreMovies();
             }
 
             @Override
             protected boolean isLastItem() {
-                return moviesViewModel.isLastPage();
+                return false;
             }
 
             @Override
             protected boolean isLoading() {
-                return moviesViewModel.isDataLoading();
+                return false;
             }
         });
-    }
 
-    public void setMoviesViewModel(MoviesViewModel moviesViewModel) {
-        this.moviesViewModel = moviesViewModel;
     }
 
     private RecyclerView.ItemDecoration getItemDecoration() {
@@ -94,6 +126,10 @@ public class GridMoviesFragment extends Fragment {
                 outRect.bottom = spacing * 2;
             }
         };
+    }
+
+    public void setSortOrder(int sortOrder) {
+        moviesViewModel.setSortOrder(sortOrder);
     }
 
 }

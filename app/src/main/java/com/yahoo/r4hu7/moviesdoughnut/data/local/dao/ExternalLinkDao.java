@@ -1,5 +1,6 @@
 package com.yahoo.r4hu7.moviesdoughnut.data.local.dao;
 
+import android.arch.lifecycle.LiveData;
 import android.arch.persistence.room.Dao;
 import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.OnConflictStrategy;
@@ -13,5 +14,5 @@ public interface ExternalLinkDao {
     void insert(MovieExternalIdsResponse... externalIdsResponses);
 
     @Query("SELECT * FROM _link WHERE id=:movieId")
-    MovieExternalIdsResponse getResponse(int movieId);
+    LiveData<MovieExternalIdsResponse> getResponse(int movieId);
 }

@@ -13,6 +13,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.yahoo.r4hu7.moviesdoughnut.R;
+import com.yahoo.r4hu7.moviesdoughnut.data.MoviesRepository;
 import com.yahoo.r4hu7.moviesdoughnut.data.remote.response.MovieResponse;
 import com.yahoo.r4hu7.moviesdoughnut.data.remote.response.model.Movie;
 import com.yahoo.r4hu7.moviesdoughnut.di.DaggerRepositoryComponent;
@@ -22,6 +23,8 @@ import com.yahoo.r4hu7.moviesdoughnut.ui.viewmodel.MovieDetailViewModel;
 import com.yahoo.r4hu7.moviesdoughnut.ui.viewmodel.ViewModelHolder;
 import com.yahoo.r4hu7.moviesdoughnut.util.ActivityUtils;
 import com.yahoo.r4hu7.moviesdoughnut.util.MovieNavigator;
+
+import java.util.Arrays;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -38,6 +41,7 @@ public class DetailsActivity extends AppCompatActivity implements MovieNavigator
     AppBarLayout abPrimary;
 
     MovieDetailViewModel viewModel;
+    MoviesRepository repository;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,15 +51,13 @@ public class DetailsActivity extends AppCompatActivity implements MovieNavigator
         setSupportActionBar(tbPrimary);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        repository = DaggerRepositoryComponent.builder().contextModule(new ContextModule(getApplicationContext())).build().getMoviesRepository();
+
         viewModel = findOrCreateMovieDetailViewModel();
         viewModel.setMovie(getIntent().getExtras().getParcelable(MOVIE_KEY));
         viewModel.setNavigator(this);
-        viewModel.loadMovieDetail();
-        viewModel.loadCast();
-        viewModel.loadImages();
-        viewModel.loadVideos();
-        viewModel.loadReviews();
-        viewModel.loadExternalIds();
+        initData();
         MovieDetailFragment fragment = findOrCreateDetailFragment();
         fragment.setViewModel(viewModel);
     }
@@ -98,7 +100,7 @@ public class DetailsActivity extends AppCompatActivity implements MovieNavigator
             return retainedViewModel.getViewModel();
         } else {
             // There is no ViewModel yet, create it.
-            MovieDetailViewModel viewModel = new MovieDetailViewModel(DaggerRepositoryComponent.builder().contextModule(new ContextModule(getApplicationContext())).build().getMoviesRepository());
+            MovieDetailViewModel viewModel = new MovieDetailViewModel(repository);
             // and bind it to this Activity's lifecycle using the Fragment Manager.
             ActivityUtils.addFragmentToActivity(
                     getSupportFragmentManager(),
@@ -132,5 +134,35 @@ public class DetailsActivity extends AppCompatActivity implements MovieNavigator
     @Override
     public void goBack() {
 
+    }
+
+    public void initData() {
+        viewModel.loadMovieDetail().observe(this, movieResponseResource -> {
+            if (movieResponseResource != null)
+                viewModel.movieDetail.set(movieResponseResource.getData());
+        });
+        viewModel.loadCast().observe(this, movieCreditsResponseResource -> {
+            if (movieCreditsResponseResource.getData() != null)
+                viewModel.casts.addAll(Arrays.asList(movieCreditsResponseResource.getData().cast));
+        });
+        viewModel.loadImages().observe(this, movieImagesResponseResource -> {
+            if (movieImagesResponseResource.getData() != null) {
+                viewModel.imageSources.addAll(Arrays.asList(movieImagesResponseResource.getData().posters));
+                viewModel.imageSources.addAll(Arrays.asList(movieImagesResponseResource.getData().backdrops));
+            }
+        });
+        viewModel.loadVideos().observe(this, movieVideosResponseResource -> {
+            if (movieVideosResponseResource.getData() != null)
+                viewModel.videos.addAll(Arrays.asList(movieVideosResponseResource.getData().results));
+        });
+        viewModel.loadReviews().observe(this, movieReviewsResponseResource -> {
+            if (movieReviewsResponseResource.getData() != null)
+                viewModel.reviews.addAll(Arrays.asList(movieReviewsResponseResource.getData().getResults()));
+        });
+        viewModel.loadExternalIds().observe(this, movieExternalIdsResponseResource -> {
+            if (movieExternalIdsResponseResource.getData() != null)
+                viewModel.externalIds.set(movieExternalIdsResponseResource.getData());
+
+        });
     }
 }

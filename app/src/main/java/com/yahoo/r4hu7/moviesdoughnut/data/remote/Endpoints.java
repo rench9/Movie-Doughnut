@@ -1,5 +1,7 @@
 package com.yahoo.r4hu7.moviesdoughnut.data.remote;
 
+import android.arch.lifecycle.LiveData;
+
 import com.yahoo.r4hu7.moviesdoughnut.data.remote.response.DiscoverMovieResponse;
 import com.yahoo.r4hu7.moviesdoughnut.data.remote.response.LatestMovieResponse;
 import com.yahoo.r4hu7.moviesdoughnut.data.remote.response.MovieCreditsResponse;
@@ -14,7 +16,6 @@ import com.yahoo.r4hu7.moviesdoughnut.data.remote.response.RecommendedMoviesResp
 import com.yahoo.r4hu7.moviesdoughnut.data.remote.response.TopRatedMovieResponse;
 import com.yahoo.r4hu7.moviesdoughnut.data.remote.response.UpcomingMovieResponse;
 
-import io.reactivex.Maybe;
 import retrofit2.http.GET;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
@@ -22,85 +23,89 @@ import retrofit2.http.Query;
 public interface Endpoints {
 
     @GET("discover/movie")
-    Maybe<DiscoverMovieResponse> discoverMovies(
+    LiveData<ApiResponse<DiscoverMovieResponse>> discoverMovies(
             @Query("sort_by") String sort_by,
             @Query("page") int page);
 
     @GET("discover/movie")
-    Maybe<DiscoverMovieResponse> discoverMovies(
+    LiveData<ApiResponse<DiscoverMovieResponse>> discoverMovies(
             @Query("page") int page);
 
     @GET("movie/{movie_id}")
-    Maybe<MovieResponse> getMovieById(
+    LiveData<ApiResponse<MovieResponse>> getMovieById(
             @Path("movie_id") int movie_id);
 
     @GET("movie/latest")
-    Maybe<LatestMovieResponse> getLatestMovie();
+    LiveData<ApiResponse<LatestMovieResponse>> getLatestMovie();
 
     @GET("movie/now_playing")
-    Maybe<NowPlayingMovieResponse> getNowPlayingMovies(
+    LiveData<ApiResponse<NowPlayingMovieResponse>> getNowPlayingMovies(
             @Query("page") int page);
 
     @GET("movie/now_playing")
-    Maybe<NowPlayingMovieResponse> getNowPlayingMovies(
+    LiveData<ApiResponse<NowPlayingMovieResponse>> getNowPlayingMovies(
             @Query("page") int page,
             @Query("region") String region);
 
     @GET("movie/popular")
-    Maybe<PopularMovieResponse> getPopularMovies(
+    LiveData<ApiResponse<PopularMovieResponse>> getPopularMovies(
             @Query("page") int page);
 
     @GET("movie/popular")
-    Maybe<PopularMovieResponse> getPopularMovies(
+    LiveData<ApiResponse<PopularMovieResponse>> getPopularMovie(
+            @Query("page") int page);
+
+    @GET("movie/popular")
+    LiveData<ApiResponse<PopularMovieResponse>> getPopularMovies(
             @Query("page") int page,
             @Query("region") String region);
 
     @GET("movie/top_rated")
-    Maybe<TopRatedMovieResponse> getTopRatedMovies(
+    LiveData<ApiResponse<TopRatedMovieResponse>> getTopRatedMovies(
             @Query("page") int page);
 
     @GET("movie/top_rated")
-    Maybe<TopRatedMovieResponse> getTopRatedMovies(
+    LiveData<ApiResponse<TopRatedMovieResponse>> getTopRatedMovies(
             @Query("page") int page,
             @Query("region") String region);
 
     @GET("movie/upcoming")
-    Maybe<UpcomingMovieResponse> getUpcomingMovies(
+    LiveData<ApiResponse<UpcomingMovieResponse>> getUpcomingMovies(
             @Query("page") int page);
 
     @GET("movie/upcoming")
-    Maybe<UpcomingMovieResponse> getUpcomingMovies(
+    LiveData<ApiResponse<UpcomingMovieResponse>> getUpcomingMovies(
             @Query("page") int page,
             @Query("region") String region);
 
     @GET("movie/{movie_id}/similar")
-    Maybe<RecommendedMoviesResponse> getSimilarMovies(
+    LiveData<ApiResponse<RecommendedMoviesResponse>> getSimilarMovies(
             @Path("movie_id") int movie_id,
             @Query("page") int page);
 
     @GET("movie/{movie_id}/recommendations")
-    Maybe<RecommendedMoviesResponse> getRecommendedMovies(
+    LiveData<ApiResponse<RecommendedMoviesResponse>> getRecommendedMovies(
             @Path("movie_id") int movie_id,
             @Query("page") int page);
 
     @GET("movie/{movie_id}/reviews")
-    Maybe<MovieReviewsResponse> getMovieReviews(
+    LiveData<ApiResponse<MovieReviewsResponse>> getMovieReviews(
             @Path("movie_id") int movie_id,
             @Query("page") int page);
 
     @GET("movie/{movie_id}/images")
-    Maybe<MovieImagesResponse> getMovieImages(
+    LiveData<ApiResponse<MovieImagesResponse>> getMovieImages(
             @Path("movie_id") int movie_id);
 
     @GET("movie/{movie_id}/videos")
-    Maybe<MovieVideosResponse> getMovieVideos(
+    LiveData<ApiResponse<MovieVideosResponse>> getMovieVideos(
             @Path("movie_id") int movie_id);
 
     @GET("movie/{movie_id}/credits")
-    Maybe<MovieCreditsResponse> getMovieCredits(
+    LiveData<ApiResponse<MovieCreditsResponse>> getMovieCredits(
             @Path("movie_id") int movie_id);
 
     @GET("movie/{movie_id}/external_ids")
-    Maybe<MovieExternalIdsResponse> getMovieExternalIds(
+    LiveData<ApiResponse<MovieExternalIdsResponse>> getMovieExternalIds(
             @Path("movie_id") int movie_id);
 }

@@ -1,7 +1,9 @@
 package com.yahoo.r4hu7.moviesdoughnut.data.remote.request;
 
+import android.arch.lifecycle.LiveData;
+
+import com.yahoo.r4hu7.moviesdoughnut.data.remote.ApiResponse;
 import com.yahoo.r4hu7.moviesdoughnut.data.remote.Endpoints;
-import com.yahoo.r4hu7.moviesdoughnut.data.remote.response.DiscoverMovieResponse;
 import com.yahoo.r4hu7.moviesdoughnut.data.remote.response.LatestMovieResponse;
 import com.yahoo.r4hu7.moviesdoughnut.data.remote.response.MovieCreditsResponse;
 import com.yahoo.r4hu7.moviesdoughnut.data.remote.response.MovieExternalIdsResponse;
@@ -15,10 +17,6 @@ import com.yahoo.r4hu7.moviesdoughnut.data.remote.response.RecommendedMoviesResp
 import com.yahoo.r4hu7.moviesdoughnut.data.remote.response.TopRatedMovieResponse;
 import com.yahoo.r4hu7.moviesdoughnut.data.remote.response.UpcomingMovieResponse;
 
-import io.reactivex.Maybe;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.schedulers.Schedulers;
-
 public class Movies {
     private Endpoints endpoints;
 
@@ -26,72 +24,76 @@ public class Movies {
         endpoints = e;
     }
 
-    public Maybe<MovieResponse> getMovieById(int movieId) {
-        return endpoints.getMovieById(movieId).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread());
+    public LiveData<ApiResponse<MovieResponse>> getMovieById(int movieId) {
+        return endpoints.getMovieById(movieId);
     }
 
-    public Maybe<LatestMovieResponse> getLatestMovie() {
-        return endpoints.getLatestMovie().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread());
+    public LiveData<ApiResponse<LatestMovieResponse>> getLatestMovie() {
+        return endpoints.getLatestMovie();
     }
 
-    public Maybe<NowPlayingMovieResponse> getNowPlayingMovies(int page) {
-        return endpoints.getNowPlayingMovies(page).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread());
+    public LiveData<ApiResponse<NowPlayingMovieResponse>> getNowPlayingMovies(int page) {
+        return endpoints.getNowPlayingMovies(page);
     }
 
-    public Maybe<NowPlayingMovieResponse> getNowPlayingMovies(int page, String region) {
-        return endpoints.getNowPlayingMovies(page, region).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread());
+    public LiveData<ApiResponse<NowPlayingMovieResponse>> getNowPlayingMovies(int page, String region) {
+        return endpoints.getNowPlayingMovies(page, region);
     }
 
-    public Maybe<PopularMovieResponse> getPopularMovies(int page) {
-        return endpoints.getPopularMovies(page).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread());
+    public LiveData<ApiResponse<PopularMovieResponse>> getPopularMovies(int page) {
+        return endpoints.getPopularMovies(page);
     }
 
-    public Maybe<PopularMovieResponse> getPopularMovies(int page, String region) {
-        return endpoints.getPopularMovies(page, region).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread());
+    public LiveData<ApiResponse<PopularMovieResponse>> getPopularMovie(int page) {
+        return endpoints.getPopularMovie(page);
     }
 
-    public Maybe<TopRatedMovieResponse> getTopRatedMovies(int page) {
-        return endpoints.getTopRatedMovies(page).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread());
+    public LiveData<ApiResponse<PopularMovieResponse>> getPopularMovies(int page, String region) {
+        return endpoints.getPopularMovies(page, region);
     }
 
-    public Maybe<TopRatedMovieResponse> getTopRatedMovies(int page, String region) {
-        return endpoints.getTopRatedMovies(page, region).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread());
+    public LiveData<ApiResponse<TopRatedMovieResponse>> getTopRatedMovies(int page) {
+        return endpoints.getTopRatedMovies(page);
     }
 
-    public Maybe<UpcomingMovieResponse> getUpcomingMovies(int page) {
-        return endpoints.getUpcomingMovies(page).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread());
+    public LiveData<ApiResponse<TopRatedMovieResponse>> getTopRatedMovies(int page, String region) {
+        return endpoints.getTopRatedMovies(page, region);
     }
 
-    public Maybe<UpcomingMovieResponse> getUpcomingMovies(int page, String region) {
-        return endpoints.getUpcomingMovies(page, region).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread());
+    public LiveData<ApiResponse<UpcomingMovieResponse>> getUpcomingMovies(int page) {
+        return endpoints.getUpcomingMovies(page);
     }
 
-    public Maybe<RecommendedMoviesResponse> getSimilarMovies(int movieId, int page) {
-        return endpoints.getSimilarMovies(movieId, page).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread());
+    public LiveData<ApiResponse<UpcomingMovieResponse>> getUpcomingMovies(int page, String region) {
+        return endpoints.getUpcomingMovies(page, region);
     }
 
-    public Maybe<RecommendedMoviesResponse> getRecommendedMovies(int movieId, int page) {
-        return endpoints.getRecommendedMovies(movieId, page).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread());
+    public LiveData<ApiResponse<RecommendedMoviesResponse>> getSimilarMovies(int movieId, int page) {
+        return endpoints.getSimilarMovies(movieId, page);
     }
 
-    public Maybe<MovieReviewsResponse> getMovieReviews(int movieId, int page) {
-        return endpoints.getMovieReviews(movieId, page).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread());
+    public LiveData<ApiResponse<RecommendedMoviesResponse>> getRecommendedMovies(int movieId, int page) {
+        return endpoints.getRecommendedMovies(movieId, page);
     }
 
-    public Maybe<MovieImagesResponse> getMovieImages(int movieId) {
-        return endpoints.getMovieImages(movieId).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread());
+    public LiveData<ApiResponse<MovieReviewsResponse>> getMovieReviews(int movieId, int page) {
+        return endpoints.getMovieReviews(movieId, page);
     }
 
-    public Maybe<MovieVideosResponse> getMovieVideos(int movieId) {
-        return endpoints.getMovieVideos(movieId).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread());
+    public LiveData<ApiResponse<MovieImagesResponse>> getMovieImages(int movieId) {
+        return endpoints.getMovieImages(movieId);
     }
 
-    public Maybe<MovieCreditsResponse> getMovieCredits(int movieId) {
-        return endpoints.getMovieCredits(movieId).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread());
+    public LiveData<ApiResponse<MovieVideosResponse>> getMovieVideos(int movieId) {
+        return endpoints.getMovieVideos(movieId);
     }
 
-    public Maybe<MovieExternalIdsResponse> getMovieExternalIds(int movieId) {
-        return endpoints.getMovieExternalIds(movieId).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread());
+    public LiveData<ApiResponse<MovieCreditsResponse>> getMovieCredits(int movieId) {
+        return endpoints.getMovieCredits(movieId);
+    }
+
+    public LiveData<ApiResponse<MovieExternalIdsResponse>> getMovieExternalIds(int movieId) {
+        return endpoints.getMovieExternalIds(movieId);
     }
 
 }

@@ -17,6 +17,8 @@ import com.yahoo.r4hu7.moviesdoughnut.data.remote.response.model.Movie;
                 onDelete = ForeignKey.CASCADE)})
 public class SortOrder {
     @Ignore
+    public static final int NONE = -1;
+    @Ignore
     public static final int POPULAR = 1;
     @Ignore
     public static final int TOPRATED = 2;

@@ -5,19 +5,14 @@ import android.animation.AnimatorListenerAdapter;
 import android.animation.ArgbEvaluator;
 import android.animation.PropertyValuesHolder;
 import android.animation.ValueAnimator;
-import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.res.ColorStateList;
 import android.databinding.Observable;
 import android.databinding.ObservableBoolean;
-import android.net.ConnectivityManager;
-import android.net.Network;
-import android.net.NetworkRequest;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.annotation.RequiresApi;
 import android.support.design.widget.AppBarLayout;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -30,7 +25,6 @@ import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.AdapterView;
 import android.widget.FrameLayout;
-import android.widget.Toast;
 
 import com.yahoo.r4hu7.moviesdoughnut.R;
 import com.yahoo.r4hu7.moviesdoughnut.data.MoviesRepository;
@@ -58,11 +52,6 @@ import butterknife.ButterKnife;
 public class GalleryActivity extends AppCompatActivity implements MovieNavigator, AdapterView.OnItemSelectedListener {
 
     public static final String ACTIVITY_GALLERY_VM = "ACTIVITY_GALLERY_VM";
-    public static final String MOVIES_VM = "MOVIES_VM";
-    public static final String MOVIES_VM_POPULAR = "MOVIES_VM_POPULAR";
-    public static final String MOVIES_VM_UPCOMING = "MOVIES_VM_UPCOMING";
-    public static final String MOVIES_VM_TOPRATED = "MOVIES_VM_TOPRATED";
-    public static final String MOVIES_VM_NOW_PLAYING = "MOVIES_VM_NOW_PLAYING";
     public static final String GRID_MOVIES_FRAGMENT = "GRID_MOVIES_FRAGMENT";
     public static final String LANDING_FRAGMENT = "LANDING_FRAGMENT";
     public static final String PROP_BAR_L = "PROP_BAR_L";
@@ -77,16 +66,13 @@ public class GalleryActivity extends AppCompatActivity implements MovieNavigator
     private SplashScreenFragment splashScreenFragment;
 
     private GalleryActivityViewModel activityViewModel;
-    private MoviesViewModel nowPlayingMoviesViewModel;
-    private MoviesViewModel upcomingMoviesViewModel;
-    private MoviesViewModel topRatedMoviesViewModel;
-    private MoviesViewModel popularMoviesViewModel;
-    private MoviesViewModel gridMoviesViewModel;
+//    private MoviesViewModel gridMoviesViewModel;
 
     private Observable.OnPropertyChangedCallback fragmentSwitcherCallback;
     private Observable.OnPropertyChangedCallback filterChangeCallback;
 
     private Menu mMenu;
+    private GridMoviesFragment gridMoviesFragment;
 
     @BindView(R.id.tbPrimary)
     Toolbar toolbar;
@@ -104,14 +90,14 @@ public class GalleryActivity extends AppCompatActivity implements MovieNavigator
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_gallery);
         ButterKnife.bind(this);
-        showSplash();
+//        showSplash();
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         initFilterSpinner();
         initAnimator();
-        initNetworkListener();
         if (repository == null)
             repository = DaggerRepositoryComponent.builder().contextModule(new ContextModule(getApplicationContext())).build().getMoviesRepository();
+
         if (fragmentSwitcherCallback == null)
             fragmentSwitcherCallback = new Observable.OnPropertyChangedCallback() {
                 @Override
@@ -120,9 +106,7 @@ public class GalleryActivity extends AppCompatActivity implements MovieNavigator
                         showSearchOption();
                         showGridFragment();
                         hideSearchBar();
-
                     } else {
-
                         hideSearchOption();
                         showLandingFragment();
                         initAnimator();
@@ -191,64 +175,6 @@ public class GalleryActivity extends AppCompatActivity implements MovieNavigator
         spnContainer.setOnItemSelectedListener(this);
 
     }
-
-    private void initNetworkListener() {
-        connectivityChangeListener = new ConnectivityChangeListener() {
-
-            @Override
-            public void connected() {
-                if (ActivityUtils.splashGone) ;
-                Toast.makeText(
-                        getApplicationContext(),
-                        "You are connected now",
-                        Toast.LENGTH_SHORT).show();
-                if (repository != null)
-                    repository.setOffline(false);
-            }
-
-            @Override
-            public void disConnected() {
-                Toast.makeText(
-                        getApplicationContext(),
-                        "No internet connectivity",
-                        Toast.LENGTH_SHORT).show();
-                if (repository != null)
-                    repository.setOffline(true);
-            }
-        };
-        intentFilter = new IntentFilter();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            createChangeConnectivityMonitor();
-            intentFilter.addAction(CONNECTIVITY_CHANGE);
-        } else {
-            intentFilter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
-        }
-
-        registerReceiver(connectivityChangeListener, intentFilter);
-    }
-
-    @RequiresApi(Build.VERSION_CODES.N)
-    private void createChangeConnectivityMonitor() {
-        final Intent intent = new Intent(CONNECTIVITY_CHANGE);
-        ConnectivityManager connectivityManager = (ConnectivityManager)
-                getSystemService(Context.CONNECTIVITY_SERVICE);
-        if (connectivityManager != null) {
-            connectivityManager.registerNetworkCallback(
-                    new NetworkRequest.Builder().build(),
-                    new ConnectivityManager.NetworkCallback() {
-                        @Override
-                        public void onAvailable(Network network) {
-                            sendBroadcast(intent);
-                        }
-
-                        @Override
-                        public void onLost(Network network) {
-                            sendBroadcast(intent);
-                        }
-                    });
-        }
-    }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -363,28 +289,11 @@ public class GalleryActivity extends AppCompatActivity implements MovieNavigator
 
     private void showLandingFragment() {
         GalleryLandingFragment fragment = findOrCreateLandingFragment();
-        if (nowPlayingMoviesViewModel == null || upcomingMoviesViewModel == null || topRatedMoviesViewModel == null || popularMoviesViewModel == null) {
-            nowPlayingMoviesViewModel = findOrCreateMoviesViewModel(MOVIES_VM_NOW_PLAYING);
-            upcomingMoviesViewModel = findOrCreateMoviesViewModel(MOVIES_VM_UPCOMING);
-            topRatedMoviesViewModel = findOrCreateMoviesViewModel(MOVIES_VM_TOPRATED);
-            popularMoviesViewModel = findOrCreateMoviesViewModel(MOVIES_VM_POPULAR);
-        }
-        fragment.setNowPlayingViewModel(nowPlayingMoviesViewModel);
-        fragment.setUpComingViewModel(upcomingMoviesViewModel);
-        fragment.setTopRatedViewModel(topRatedMoviesViewModel);
-        fragment.setPopularViewModel(popularMoviesViewModel);
-        nowPlayingMoviesViewModel.dataLoaded.addOnPropertyChangedCallback(new Observable.OnPropertyChangedCallback() {
-            @Override
-            public void onPropertyChanged(Observable sender, int propertyId) {
-                hideSplash();
-            }
-        });
+
     }
 
     private void showGridFragment() {
-        gridMoviesViewModel = findOrCreateMoviesViewModel(MOVIES_VM);
-        GridMoviesFragment fragment = findOrCreateGridFragment();
-        fragment.setMoviesViewModel(gridMoviesViewModel);
+        gridMoviesFragment = findOrCreateGridFragment();
     }
 
     @NonNull
@@ -477,9 +386,8 @@ public class GalleryActivity extends AppCompatActivity implements MovieNavigator
     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
         if (adapterView.getSelectedItem() instanceof Filter) {
             Filter f = (Filter) adapterView.getSelectedItem();
-            if (gridMoviesViewModel != null) {
-                gridMoviesViewModel.setSortOrder(f.getSortOrder());
-                gridMoviesViewModel.loadMovies();
+            if (gridMoviesFragment != null) {
+                gridMoviesFragment.setSortOrder(f.getSortOrder());
             }
         }
     }

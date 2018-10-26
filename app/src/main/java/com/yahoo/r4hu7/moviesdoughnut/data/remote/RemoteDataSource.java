@@ -1,137 +1,82 @@
 package com.yahoo.r4hu7.moviesdoughnut.data.remote;
 
+import android.arch.lifecycle.LiveData;
 import android.support.annotation.NonNull;
 
-import com.yahoo.r4hu7.moviesdoughnut.data.MoviesDataSource;
-import com.yahoo.r4hu7.moviesdoughnut.data.SortOrder;
-import com.yahoo.r4hu7.moviesdoughnut.data.local.LocalDataSource;
 import com.yahoo.r4hu7.moviesdoughnut.data.remote.request.Movies;
 import com.yahoo.r4hu7.moviesdoughnut.data.remote.response.MovieCreditsResponse;
 import com.yahoo.r4hu7.moviesdoughnut.data.remote.response.MovieExternalIdsResponse;
 import com.yahoo.r4hu7.moviesdoughnut.data.remote.response.MovieImagesResponse;
 import com.yahoo.r4hu7.moviesdoughnut.data.remote.response.MovieResponse;
+import com.yahoo.r4hu7.moviesdoughnut.data.remote.response.MovieReviewsResponse;
 import com.yahoo.r4hu7.moviesdoughnut.data.remote.response.MovieVideosResponse;
-import com.yahoo.r4hu7.moviesdoughnut.data.remote.response.model.Movie;
-import com.yahoo.r4hu7.moviesdoughnut.data.remote.response.model.Review;
+import com.yahoo.r4hu7.moviesdoughnut.data.remote.response.NowPlayingMovieResponse;
+import com.yahoo.r4hu7.moviesdoughnut.data.remote.response.PopularMovieResponse;
+import com.yahoo.r4hu7.moviesdoughnut.data.remote.response.TopRatedMovieResponse;
+import com.yahoo.r4hu7.moviesdoughnut.data.remote.response.UpcomingMovieResponse;
 
-public class RemoteDataSource implements MoviesDataSource {
+public class RemoteDataSource {
 
     private static RemoteDataSource INSTANCE;
     private Movies movies;
-    private LocalDataSource localDataSource;
 
-    private RemoteDataSource(@NonNull Endpoints endpoints, @NonNull LocalDataSource localDataSource) {
+    private RemoteDataSource(@NonNull Endpoints endpoints) {
         this.movies = new Movies(endpoints);
-        this.localDataSource = localDataSource;
     }
 
-    public static RemoteDataSource getInstance(Endpoints endpoints, LocalDataSource localDataSource) {
+    public static RemoteDataSource getInstance(Endpoints endpoints) {
         if (INSTANCE == null)
-            INSTANCE = new RemoteDataSource(endpoints, localDataSource);
+            INSTANCE = new RemoteDataSource(endpoints);
         return INSTANCE;
     }
 
-    @Override
-    public void getMovies(int sortOrder, int page, LoadPagingItemCallback<Movie[], Integer, Integer> callback) {
 
-        switch (sortOrder) {
-            case SortOrder.POPULAR:
-                movies.getPopularMovies(page).subscribe(new MovieResponseObserver<>(callback));
-                break;
-            case SortOrder.NOWPLAYING:
-                movies.getNowPlayingMovies(page).subscribe(new MovieResponseObserver<>(callback));
-                break;
-            case SortOrder.TOPRATED:
-                movies.getTopRatedMovies(page).subscribe(new MovieResponseObserver<>(callback));
-                break;
-            case SortOrder.UPCOMING:
-                movies.getUpcomingMovies(page).subscribe(new MovieResponseObserver<>(callback));
-                break;
-            default:
-                movies.getPopularMovies(page).subscribe(new MovieResponseObserver<>(callback));
-                break;
-        }
+    public LiveData<ApiResponse<NowPlayingMovieResponse>> getNowPlayingMovies(int page) {
+        return movies.getNowPlayingMovies(page);
     }
 
-    @Override
-    public void getMovie(int movieId, LoadItemCallback<MovieResponse> callback) {
-        MovieResponseObserver observer = new MovieResponseObserver<>(callback);
-        movies.getMovieById(movieId).subscribe(observer);
+
+    public LiveData<ApiResponse<PopularMovieResponse>> getPopularMovies(int page) {
+        return movies.getPopularMovies(page);
     }
 
-    @Override
-    public void getImages(int movieId, LoadItemCallback<MovieImagesResponse> callback) {
-        movies.getMovieImages(movieId).subscribe(new MovieResponseObserver<>(callback));
+
+    public LiveData<ApiResponse<TopRatedMovieResponse>> getTopRatedMovies(int page) {
+        return movies.getTopRatedMovies(page);
     }
 
-    @Override
-    public void getCast(int movieId, LoadItemCallback<MovieCreditsResponse> callback) {
-        movies.getMovieCredits(movieId).subscribe(new MovieResponseObserver<>(callback));
 
+    public LiveData<ApiResponse<UpcomingMovieResponse>> getUpcomingMovies(int page) {
+        return movies.getUpcomingMovies(page);
     }
 
-    @Override
-    public void getVideo(int movieId, LoadItemCallback<MovieVideosResponse> callback) {
-        movies.getMovieVideos(movieId).subscribe(new MovieResponseObserver<>(callback));
+
+    public LiveData<ApiResponse<MovieResponse>> getMovie(int movieId) {
+        return movies.getMovieById(movieId);
     }
 
-    @Override
-    public void getReviews(int movieId, int page, LoadPagingItemCallback<Review[], Integer, Integer> callback) {
-        movies.getMovieReviews(movieId, page).subscribe(new MovieResponseObserver<>(callback));
+
+    public LiveData<ApiResponse<MovieImagesResponse>> getImages(int movieId) {
+        return movies.getMovieImages(movieId);
     }
 
-    @Override
-    public void getLinks(int movieId, LoadItemCallback<MovieExternalIdsResponse> callback) {
-        movies.getMovieExternalIds(movieId).subscribe(new MovieResponseObserver<>(callback));
+
+    public LiveData<ApiResponse<MovieCreditsResponse>> getCast(int movieId) {
+        return movies.getMovieCredits(movieId);
     }
 
-    @Override
-    public void isMovieFav(int movieId, LoadItemCallback<Boolean> callback) {
-        localDataSource.isMovieFav(movieId, callback);
+
+    public LiveData<ApiResponse<MovieVideosResponse>> getVideo(int movieId) {
+        return movies.getMovieVideos(movieId);
     }
 
-    @Override
-    public void markFavourite(int movieId) {
-        localDataSource.markFavourite(movieId);
+
+    public LiveData<ApiResponse<MovieReviewsResponse>> getReviews(int movieId, int page) {
+        return movies.getMovieReviews(movieId, page);
     }
 
-    @Override
-    public void unMarkFavourite(int movieId) {
-        localDataSource.unMarkFavourite(movieId);
-    }
 
-    @Override
-    public void saveMovies(Movie[] movies) {
-        localDataSource.saveMovies(movies);
-    }
-
-    @Override
-    public void saveMovie(MovieResponse movie) {
-        localDataSource.saveMovie(movie);
-    }
-
-    @Override
-    public void saveImages(MovieImagesResponse movieImagesResponse) {
-        localDataSource.saveImages(movieImagesResponse);
-    }
-
-    @Override
-    public void saveCast(MovieCreditsResponse movieCreditsResponse) {
-        localDataSource.saveCast(movieCreditsResponse);
-    }
-
-    @Override
-    public void saveVideo(MovieVideosResponse movieVideosResponse) {
-        localDataSource.saveVideo(movieVideosResponse);
-    }
-
-    @Override
-    public void saveSortOrder(int sortId, Movie[] movies) {
-        localDataSource.saveSortOrder(sortId, movies);
-    }
-
-    @Override
-    public void saveLinks(MovieExternalIdsResponse movieExternalIdsResponse) {
-        localDataSource.saveLinks(movieExternalIdsResponse);
+    public LiveData<ApiResponse<MovieExternalIdsResponse>> getLinks(int movieId) {
+        return movies.getMovieExternalIds(movieId);
     }
 }

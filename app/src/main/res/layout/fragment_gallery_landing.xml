@@ -23,6 +23,7 @@
     </data>
 
     <android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@id/svContainer"
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -42,7 +43,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/unit6"
                 android:orientation="horizontal"
-                android:visibility="@{nowPlayingVm.movies.isEmpty()?View.GONE:View.VISIBLE}">
+                android:visibility="@{nowPlayingVm.movies.getValue().getData().isEmpty()?View.GONE:View.VISIBLE}">
 
                 <TextView
                     style="@style/typography_subheading_light"
@@ -111,7 +112,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/unit6"
                 android:orientation="horizontal"
-                android:visibility="@{popularVm.movies.isEmpty()?View.GONE:View.VISIBLE}">
+                android:visibility="@{popularVm.movies.getValue().getData().isEmpty()?View.GONE:View.VISIBLE}">
 
                 <TextView
                     style="@style/typography_subheading_light"

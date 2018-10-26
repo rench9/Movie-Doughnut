@@ -43,4 +43,6 @@
     <item name="cvVideo" type="id" />
     <item name="ivLoading" type="id" />
     <item name="tvShare" type="id" />
+    <item name="clRoot" type="id" />
+    <item name="svContainer" type="id" />
 </resources>

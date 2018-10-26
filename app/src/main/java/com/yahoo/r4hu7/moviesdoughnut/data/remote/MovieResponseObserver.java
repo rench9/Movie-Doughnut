@@ -1,27 +1,7 @@
 package com.yahoo.r4hu7.moviesdoughnut.data.remote;
 
-import android.support.annotation.NonNull;
-
-import com.yahoo.r4hu7.moviesdoughnut.data.MoviesDataSource;
-import com.yahoo.r4hu7.moviesdoughnut.data.remote.response.MovieCreditsResponse;
-import com.yahoo.r4hu7.moviesdoughnut.data.remote.response.MovieExternalIdsResponse;
-import com.yahoo.r4hu7.moviesdoughnut.data.remote.response.MovieImagesResponse;
-import com.yahoo.r4hu7.moviesdoughnut.data.remote.response.MovieResponse;
-import com.yahoo.r4hu7.moviesdoughnut.data.remote.response.MovieReviewsResponse;
-import com.yahoo.r4hu7.moviesdoughnut.data.remote.response.MovieVideosResponse;
-import com.yahoo.r4hu7.moviesdoughnut.data.remote.response.MoviesSource;
-import com.yahoo.r4hu7.moviesdoughnut.data.remote.response.model.Backdrop;
-import com.yahoo.r4hu7.moviesdoughnut.data.remote.response.model.ImageSource;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
-import io.reactivex.MaybeObserver;
-import io.reactivex.disposables.Disposable;
-
-public class MovieResponseObserver<T> implements MaybeObserver<T> {
-
+public class MovieResponseObserver<T> {
+/*
     private MoviesDataSource.LoadPagingItemCallback loadPagingItemCallback;
     private MoviesDataSource.LoadItemCallback loadItemCallback;
 
@@ -82,5 +62,5 @@ public class MovieResponseObserver<T> implements MaybeObserver<T> {
 
         }
         return movieImagesResponse;
-    }
+    }*/
 }

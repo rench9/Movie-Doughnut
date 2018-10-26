@@ -23,9 +23,10 @@ public class OkHttpClientModule {
     public OkHttpClient okHttpClient(Cache cache, Interceptor interceptor) {
         return new OkHttpClient.Builder()
                 .connectTimeout(7, TimeUnit.SECONDS)
-                .readTimeout(30, TimeUnit.SECONDS)
+                .readTimeout(12, TimeUnit.SECONDS)
                 .retryOnConnectionFailure(true)
                 .addInterceptor(interceptor)
+                .cache(cache)
                 .build();
     }
 

@@ -1,5 +1,6 @@
 package com.yahoo.r4hu7.moviesdoughnut.data.local.dao;
 
+import android.arch.lifecycle.LiveData;
 import android.arch.persistence.room.Dao;
 import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.OnConflictStrategy;
@@ -13,5 +14,5 @@ public interface VideoDao {
     void insert(MovieVideosResponse... videosResponses);
 
     @Query("SELECT * FROM _video WHERE id=:movieId")
-    MovieVideosResponse getResponse(int movieId);
+    LiveData<MovieVideosResponse> getResponse(int movieId);
 }

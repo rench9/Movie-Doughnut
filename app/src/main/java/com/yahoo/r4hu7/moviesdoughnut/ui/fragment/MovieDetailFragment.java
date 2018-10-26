@@ -57,8 +57,13 @@ public class MovieDetailFragment extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        initDate();
         initRecyclerViews();
         tvShare.setOnClickListener(view -> shareVideo());
+    }
+
+    private void initDate() {
+
     }
 
     private void initRecyclerViews() {

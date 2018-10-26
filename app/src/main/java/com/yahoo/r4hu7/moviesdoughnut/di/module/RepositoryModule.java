@@ -15,8 +15,8 @@ import dagger.Provides;
 @Module(includes = {RetrofitModule.class})
 public class RepositoryModule {
     @Provides
-    public MoviesRepository moviesRepository(LocalDataSource localDataSource, RemoteDataSource remoteDataSource) {
-        return MoviesRepository.getInstance(localDataSource, remoteDataSource);
+    public MoviesRepository moviesRepository(LocalDataSource localDataSource, RemoteDataSource remoteDataSource, AppExecutors appExecutors) {
+        return MoviesRepository.getInstance(localDataSource, remoteDataSource, appExecutors);
     }
 
     @Provides
@@ -25,8 +25,8 @@ public class RepositoryModule {
     }
 
     @Provides
-    public RemoteDataSource remoteDataSource(Endpoints endpoints, LocalDataSource localDataSource) {
-        return RemoteDataSource.getInstance(endpoints, localDataSource);
+    public RemoteDataSource remoteDataSource(Endpoints endpoints) {
+        return RemoteDataSource.getInstance(endpoints);
     }
 
     @Provides

@@ -1,29 +1,36 @@
 package com.yahoo.r4hu7.moviesdoughnut.data;
 
+import android.arch.lifecycle.LiveData;
+
 import com.yahoo.r4hu7.moviesdoughnut.data.remote.response.MovieCreditsResponse;
 import com.yahoo.r4hu7.moviesdoughnut.data.remote.response.MovieExternalIdsResponse;
 import com.yahoo.r4hu7.moviesdoughnut.data.remote.response.MovieImagesResponse;
 import com.yahoo.r4hu7.moviesdoughnut.data.remote.response.MovieResponse;
 import com.yahoo.r4hu7.moviesdoughnut.data.remote.response.MovieVideosResponse;
 import com.yahoo.r4hu7.moviesdoughnut.data.remote.response.model.Movie;
-import com.yahoo.r4hu7.moviesdoughnut.data.remote.response.model.Review;
 
 public interface MoviesDataSource {
-    void getMovies(int sortOrder, int page, LoadPagingItemCallback<Movie[], Integer, Integer> callback);
+    <T> T getNowPlayingMovies(int page);
 
-    void getMovie(int movieId, LoadItemCallback<MovieResponse> callback);
+    <T> T getPopularMovies(int page);
 
-    void getImages(int movieId, LoadItemCallback<MovieImagesResponse> callback);
+    <T> T getTopRatedMovies(int page);
 
-    void getCast(int movieId, LoadItemCallback<MovieCreditsResponse> callback);
+    <T> T getUpcomingMovies(int page);
 
-    void getVideo(int movieId, LoadItemCallback<MovieVideosResponse> callback);
+    <T> LiveData<MovieResponse> getMovie(int movieId);
 
-    void getReviews(int movieId, int page, LoadPagingItemCallback<Review[], Integer, Integer> callback);
+    <T> LiveData<MovieImagesResponse> getImages(int movieId);
 
-    void getLinks(int movieId, LoadItemCallback<MovieExternalIdsResponse> callback);
+    <T> LiveData<MovieCreditsResponse> getCast(int movieId);
 
-    void isMovieFav(int movieId, LoadItemCallback<Boolean> callback);
+    <T> LiveData<MovieVideosResponse> getVideo(int movieId);
+
+    <T> T getReviews(int movieId, int page);
+
+    <T> T getLinks(int movieId);
+
+    <T> T isMovieFav(int movieId);
 
     void markFavourite(int movieId);
 
@@ -43,7 +50,7 @@ public interface MoviesDataSource {
 
     void saveLinks(MovieExternalIdsResponse movieExternalIdsResponse);
 
-    interface LoadItemCallback<T> {
+/*    interface LoadItemCallback<T> {
         void onLoading();
 
         void onItemLoaded(T t);
@@ -57,5 +64,5 @@ public interface MoviesDataSource {
         void onItemLoaded(T t, T2 page, T3 totalPages);
 
         void onDataNotAvailable(Throwable e);
-    }
+    }*/
 }

@@ -1,5 +1,6 @@
 package com.yahoo.r4hu7.moviesdoughnut.data.local.dao;
 
+import android.arch.lifecycle.LiveData;
 import android.arch.persistence.room.Dao;
 import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.OnConflictStrategy;
@@ -22,14 +23,17 @@ public interface MovieDao {
     void unMarkFavourite(int movieId);
 
     @Query("SELECT isFav FROM _movie WHERE id =:movieId")
-    boolean isMovieFav(int movieId);
+    LiveData<Boolean> isMovieFav(int movieId);
 
     @Query("SELECT id FROM _movie WHERE isFav=1")
-    List<Integer> getFavMovieIds();
+    LiveData<List<Integer>> getFavMovieIds();
 
     @Query("SELECT * FROM _movie WHERE isFav=1")
-    List<Movie> getFavMovies();
+    LiveData<List<Movie>> getFavMovies();
+
+//    @Query("SELECT _movie.* FROM _movie INNER JOIN _sort_order ON _movie.id=_sort_order.movieId WHERE _sort_order.sortId=:sortId ORDER BY release_date DESC")
+//    List<Movie> findMovies(int sortId);
 
     @Query("SELECT _movie.* FROM _movie INNER JOIN _sort_order ON _movie.id=_sort_order.movieId WHERE _sort_order.sortId=:sortId ORDER BY release_date DESC")
-    List<Movie> findMovies(int sortId);
+    LiveData<List<Movie>> findMovies(int sortId);
 }

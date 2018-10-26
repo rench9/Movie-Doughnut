@@ -1,7 +1,6 @@
 package com.yahoo.r4hu7.moviesdoughnut.ui.dependency.adapter;
 
 import android.databinding.DataBindingUtil;
-import android.databinding.ObservableList;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -14,51 +13,20 @@ import com.yahoo.r4hu7.moviesdoughnut.databinding.AdapterPosterGridBinding;
 import com.yahoo.r4hu7.moviesdoughnut.ui.viewmodel.PosterViewModel;
 import com.yahoo.r4hu7.moviesdoughnut.util.MovieNavigator;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class PosterCardAdapter extends RecyclerView.Adapter<PosterCardAdapter.ViewHolder> {
 
-    private ObservableList<Movie> movies;
-    private ObservableList.OnListChangedCallback observable;
-
+    private List<Movie> movies;
     private MovieNavigator movieNavigator;
 
     private boolean isGrid;
 
-    public PosterCardAdapter(ObservableList<Movie> movies, MovieNavigator navigator, boolean isGrid) {
-        this.movies = movies;
+    public PosterCardAdapter(MovieNavigator navigator, boolean isGrid) {
+        this.movies = new ArrayList<>();
         this.movieNavigator = navigator;
         this.isGrid = isGrid;
-        this.observable = new ObservableList.
-                OnListChangedCallback<ObservableList<Movie>>() {
-            @Override
-            public void onChanged(ObservableList<Movie> sender) {
-                notifyDataSetChanged();
-            }
-
-            @Override
-            public void onItemRangeChanged(ObservableList<Movie> sender, int positionStart,
-                                           int itemCount) {
-                notifyItemRangeChanged(positionStart, itemCount);
-            }
-
-            @Override
-            public void onItemRangeInserted(ObservableList<Movie> sender, int positionStart,
-                                            int itemCount) {
-                notifyItemRangeInserted(positionStart, itemCount);
-            }
-
-            @Override
-            public void onItemRangeMoved(ObservableList<Movie> sender, int fromPosition,
-                                         int toPosition, int itemCount) {
-                notifyItemRangeChanged(fromPosition, itemCount);
-            }
-
-            @Override
-            public void onItemRangeRemoved(ObservableList<Movie> sender, int positionStart,
-                                           int itemCount) {
-                notifyItemRangeRemoved(positionStart, itemCount);
-            }
-        };
-        this.movies.addOnListChangedCallback(observable);
     }
 
 
@@ -90,6 +58,8 @@ public class PosterCardAdapter extends RecyclerView.Adapter<PosterCardAdapter.Vi
 
     @Override
     public int getItemCount() {
+        if (movies == null)
+            return 0;
         return movies.size();
     }
 
@@ -107,5 +77,10 @@ public class PosterCardAdapter extends RecyclerView.Adapter<PosterCardAdapter.Vi
             viewModel = new PosterViewModel();
             binding.setVm(viewModel);
         }
+    }
+
+    public void setMovies(List<Movie> movies) {
+        this.movies = movies;
+        notifyDataSetChanged();
     }
 }

@@ -1,5 +1,6 @@
 package com.yahoo.r4hu7.moviesdoughnut.ui.viewmodel;
 
+import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.ViewModel;
 import android.databinding.BindingAdapter;
 import android.databinding.ObservableArrayList;
@@ -13,13 +14,14 @@ import android.widget.ImageView;
 
 import com.google.common.collect.Lists;
 import com.yahoo.r4hu7.moviesdoughnut.R;
-import com.yahoo.r4hu7.moviesdoughnut.data.MoviesDataSource;
 import com.yahoo.r4hu7.moviesdoughnut.data.MoviesRepository;
+import com.yahoo.r4hu7.moviesdoughnut.data.Resource;
 import com.yahoo.r4hu7.moviesdoughnut.data.remote.TmdbConst;
 import com.yahoo.r4hu7.moviesdoughnut.data.remote.response.MovieCreditsResponse;
 import com.yahoo.r4hu7.moviesdoughnut.data.remote.response.MovieExternalIdsResponse;
 import com.yahoo.r4hu7.moviesdoughnut.data.remote.response.MovieImagesResponse;
 import com.yahoo.r4hu7.moviesdoughnut.data.remote.response.MovieResponse;
+import com.yahoo.r4hu7.moviesdoughnut.data.remote.response.MovieReviewsResponse;
 import com.yahoo.r4hu7.moviesdoughnut.data.remote.response.MovieVideosResponse;
 import com.yahoo.r4hu7.moviesdoughnut.data.remote.response.model.Cast;
 import com.yahoo.r4hu7.moviesdoughnut.data.remote.response.model.ImageSource;
@@ -63,7 +65,6 @@ public class MovieDetailViewModel extends ViewModel {
     public void setMovie(Movie movie) {
         this.movie.set(movie);
         setFavourite(movie.isFav());
-        loadFavourite();
     }
 
     public void setNavigator(@Nullable MovieNavigator mNavigator) {
@@ -100,147 +101,32 @@ public class MovieDetailViewModel extends ViewModel {
                 .into(view);
     }
 
-    public void loadFavourite() {
-        moviesRepository.isMovieFav(movie.get().getId(), new MoviesDataSource.LoadItemCallback<Boolean>() {
-            @Override
-            public void onLoading() {
-
-            }
-
-            @Override
-            public void onItemLoaded(Boolean aBoolean) {
-                MovieDetailViewModel.this.isFav.set(aBoolean);
-            }
-
-            @Override
-            public void onDataNotAvailable(Throwable e) {
-
-            }
-        });
+    public LiveData<Resource<Boolean>> loadFavourite() {
+        return moviesRepository.isMovieFav(movie.get().getId());
     }
 
-    public void loadMovieDetail() {
-        moviesRepository.getMovie(movie.get().getId(), new MoviesDataSource.LoadItemCallback<MovieResponse>() {
-            @Override
-            public void onLoading() {
-
-            }
-
-            @Override
-            public void onItemLoaded(MovieResponse movieResponse) {
-                movieDetail.set(movieResponse);
-                moviesRepository.saveMovie(movieResponse);
-            }
-
-            @Override
-            public void onDataNotAvailable(Throwable e) {
-
-            }
-        });
+    public LiveData<Resource<MovieResponse>> loadMovieDetail() {
+        return moviesRepository.getMovie(movie.get().getId());
     }
 
-    public void loadExternalIds() {
-        moviesRepository.getLinks(movie.get().getId(), new MoviesDataSource.LoadItemCallback<MovieExternalIdsResponse>() {
-            @Override
-            public void onLoading() {
-
-            }
-
-            @Override
-            public void onItemLoaded(MovieExternalIdsResponse movieExternalIdsResponse) {
-                externalIds.set(movieExternalIdsResponse);
-                moviesRepository.saveLinks(movieExternalIdsResponse);
-            }
-
-            @Override
-            public void onDataNotAvailable(Throwable e) {
-
-            }
-        });
+    public LiveData<Resource<MovieExternalIdsResponse>> loadExternalIds() {
+        return moviesRepository.getLinks(movie.get().getId());
     }
 
-    public void loadVideos() {
-        moviesRepository.getVideo(movie.get().getId(), new MoviesDataSource.LoadItemCallback<MovieVideosResponse>() {
-            @Override
-            public void onLoading() {
-
-            }
-
-            @Override
-            public void onItemLoaded(MovieVideosResponse movieVideosResponse) {
-                videos.addAll(Arrays.asList(movieVideosResponse.getResults()));
-                moviesRepository.saveVideo(movieVideosResponse);
-            }
-
-            @Override
-            public void onDataNotAvailable(Throwable e) {
-
-            }
-        });
+    public LiveData<Resource<MovieVideosResponse>> loadVideos() {
+        return moviesRepository.getVideo(movie.get().getId());
     }
 
-    public void loadCast() {
-        moviesRepository.getCast(movie.get().getId(), new MoviesDataSource.LoadItemCallback<MovieCreditsResponse>() {
-            @Override
-            public void onLoading() {
-
-            }
-
-            @Override
-            public void onItemLoaded(MovieCreditsResponse movieCreditsResponse) {
-                casts.addAll(Arrays.asList(movieCreditsResponse.getCast()));
-                moviesRepository.saveCast(movieCreditsResponse);
-            }
-
-            @Override
-            public void onDataNotAvailable(Throwable e) {
-
-            }
-        });
+    public LiveData<Resource<MovieCreditsResponse>> loadCast() {
+        return moviesRepository.getCast(movie.get().getId());
     }
 
-    public void loadImages() {
-        moviesRepository.getImages(movie.get().getId(), new MoviesDataSource.LoadItemCallback<MovieImagesResponse>() {
-            @Override
-            public void onLoading() {
-
-            }
-
-            @Override
-            public void onItemLoaded(MovieImagesResponse movieImagesResponse) {
-                imageSources.clear();
-                imageSources.addAll(Arrays.asList(movieImagesResponse.getPosters()));
-                imageSources.addAll(Arrays.asList(movieImagesResponse.getBackdrops()));
-                moviesRepository.saveImages(movieImagesResponse);
-            }
-
-            @Override
-            public void onDataNotAvailable(Throwable e) {
-
-            }
-        });
+    public LiveData<Resource<MovieImagesResponse>> loadImages() {
+        return moviesRepository.getImages(movie.get().getId());
     }
 
-    public void loadReviews() {
-        moviesRepository.getReviews(movie.get().getId(), currentReviewPage + 1, new MoviesDataSource.LoadPagingItemCallback<Review[], Integer, Integer>() {
-            @Override
-            public void onLoading() {
-                dataLoading.set(true);
-            }
-
-            @Override
-            public void onItemLoaded(Review[] reviews, Integer page, Integer totalPages) {
-                MovieDetailViewModel.this.reviews.addAll(Arrays.asList(reviews));
-                MovieDetailViewModel.this.totalReviewPages = totalPages;
-                currentReviewPage++;
-                dataLoading.set(false);
-            }
-
-            @Override
-            public void onDataNotAvailable(Throwable e) {
-                dataLoading.set(false);
-            }
-        });
+    public LiveData<Resource<MovieReviewsResponse>> loadReviews() {
+        return moviesRepository.getReviews(movie.get().getId(), currentReviewPage + 1);
     }
 
     public String getGenreString() {

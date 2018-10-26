@@ -35,4 +35,5 @@ public class MovieImagesResponse extends Response {
     public Poster[] getPosters() {
         return posters;
     }
+
 }

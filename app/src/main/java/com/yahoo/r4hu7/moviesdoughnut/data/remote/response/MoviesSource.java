@@ -2,7 +2,7 @@ package com.yahoo.r4hu7.moviesdoughnut.data.remote.response;
 
 import com.yahoo.r4hu7.moviesdoughnut.data.remote.response.model.Movie;
 
-public abstract class MoviesSource extends Response{
+public abstract class MoviesSource extends Response {
     int page;
     int total_results;
     int total_pages;
